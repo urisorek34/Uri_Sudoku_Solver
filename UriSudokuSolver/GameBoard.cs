@@ -11,10 +11,11 @@ namespace UriSudokuSolver
     {
         
         private T[,] board;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
         /// </summary>
+        /// <param name="size">The size of the board.</param>
         public GameBoard(int size)
         {
             board = new T[size, size];
