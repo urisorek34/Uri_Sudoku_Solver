@@ -9,11 +9,6 @@ namespace UriSudokuSolver
     class SudokuSolver : ISolver
     {
         private SudokuBoard board;
-        private int minValue;
-        private int maxValue;
-        private int rows;
-        private int cols;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SudokuSolver"/> class.
         /// </summary>
@@ -21,13 +16,8 @@ namespace UriSudokuSolver
         public SudokuSolver(SudokuBoard board)
         {
             this.board = board;
-            minValue = board.GetMinValue();
-            maxValue = board.GetMaxValue();
-            rows = board.GetRows();
-            cols = board.GetCols();
-            
         }
-       
+        
 
 
 

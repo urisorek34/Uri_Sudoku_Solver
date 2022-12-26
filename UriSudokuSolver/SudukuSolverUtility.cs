@@ -14,12 +14,10 @@ namespace UriSudokuSolver
         /// returns a dict of location to list of values that can be in that location.
         /// </summary>
         /// <param name="board"> the sudoku board.</param>
-        /// <param name="minValue"> the sudoku starting min value (1 if it's 1-9)</param>
-        /// <param name="maxValue"> the sudoku starting maxValue (9 if it's 1-9)</param>
         /// <returns>
         /// A dictionary of value tuples of places as key and list of optional values in that place.
         /// </returns>
-        public static Dictionary<(int, int), List<int>> CacheValidValues(SudokuBoard board, int minValue, int maxValue)
+        public static Dictionary<(int, int), List<int>> CacheValidValues(SudokuBoard board)
         {
 
             Dictionary<(int, int), List<int>> cache = new Dictionary<(int, int), List<int>>();
@@ -29,7 +27,7 @@ namespace UriSudokuSolver
                 {
                     if (board[row, col] == 0)
                     {
-                        cache.Add((row, col), AllowedValues(board, minValue, maxValue, row, col));
+                        cache.Add((row, col), AllowedValues(board, row, col));
                     }
                 }
             }
@@ -57,6 +55,7 @@ namespace UriSudokuSolver
                     {
                         return (i, j);
                     }
+                }
             }
             return (board.GetRows(), board.GetCols());
         }
@@ -110,10 +109,10 @@ namespace UriSudokuSolver
 
 
         /*Return list of legal allowed values in place in the board*/
-        private static List<int> AllowedValues(SudokuBoard board, int minValue, int maxValue, int row, int col)
+        private static List<int> AllowedValues(SudokuBoard board, int row, int col)
         {
             List<int> valuesList = new List<int>();
-            for (int value = minValue; value <= maxValue; value++)
+            for (int value = board.GetMinValue(); value <= board.GetMaxValue(); value++)
             {
                 if (IsLegalValue(board, row, col, value))
                     valuesList.Add(value);
