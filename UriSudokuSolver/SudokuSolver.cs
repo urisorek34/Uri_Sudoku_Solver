@@ -16,6 +16,7 @@ namespace UriSudokuSolver
         public SudokuSolver(SudokuBoard board)
         {
             this.board = board;
+
         }
 
         /*Function tries to solve the sudoku board.*/
@@ -66,8 +67,6 @@ namespace UriSudokuSolver
             return false;
 
         }
-
-
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace UriSudokuSolver
             }
             return cache;
         }
+
 
         /*Returns true if a value on the board is legal, false otherwise.*/
         public static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
