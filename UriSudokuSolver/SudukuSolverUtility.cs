@@ -37,13 +37,28 @@ namespace UriSudokuSolver
         }
 
         /*Returns true if a value on the board is legal, false otherwise.*/
-        private static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
+        public static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
         {
             if (IsValidForCol(board, col, value) && IsValidForRow(board, row, value) && IsValidForSection(board, row, col, value))
             {
                 return true;
             }
             return false;
+        }
+
+        /*Find the first empty place in the board*/
+        public static (int, int) FindFirstEmpty(SudokuBoard board)
+        {
+            for (int i = 0; i < board.GetRows(); i++)
+            {
+                for (int j = 0; j < board.GetCols(); j++)
+                {
+                    if (board[i, j] == 0)
+                    {
+                        return (i, j);
+                    }
+            }
+            return (board.GetRows(), board.GetCols());
         }
 
         /*Check if the value is valid for the row.*/
@@ -105,6 +120,8 @@ namespace UriSudokuSolver
             }
             return valuesList;
         }
+
+        
 
 
     }
