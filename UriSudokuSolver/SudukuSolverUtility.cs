@@ -9,7 +9,32 @@ namespace UriSudokuSolver
     /*Sudoku solver static utility class.*/
     static class SudukuSolverUtility
     {
-       
+        /// <summary>
+        /// This method finds all the allowed values in all the empty places in the board and 
+        /// returns a dict of location to list of values that can be in that location.
+        /// </summary>
+        /// <param name="board"> the sudoku board.</param>
+        /// <param name="minValue"> the sudoku starting min value (1 if it's 1-9)</param>
+        /// <param name="maxValue"> the sudoku starting maxValue (9 if it's 1-9)</param>
+        /// <returns>
+        /// A dictionary of value tuples of places as key and list of optional values in that place.
+        /// </returns>
+        public static Dictionary<(int, int), List<int>> CacheValidValues(SudokuBoard board, int minValue, int maxValue)
+        {
+
+            Dictionary<(int, int), List<int>> cache = new Dictionary<(int, int), List<int>>();
+            for (int row = 0; row < board.GetRows(); row++)
+            {
+                for (int col = 0; col < board.GetCols(); col++)
+                {
+                    if (board[row, col] == 0)
+                    {
+                        cache.Add((row, col), AllowedValues(board, minValue, maxValue, row, col));
+                    }
+                }
+            }
+            return cache;
+        }
 
         /*Returns true if a value on the board is legal, false otherwise.*/
         private static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
