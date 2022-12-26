@@ -26,5 +26,28 @@ namespace UriSudokuSolver
         //Getters for min and max values in the soduko.
         public int GetMinValue() { return minValue; }
         public int GetMaxValue() { return maxValue; }
+
+        public void FillBoard(string b)
+        {
+            int row = 0;
+            int col = 0;
+            foreach (char c in b)
+            {
+                if (c == '.')
+                {
+                    this[row, col] = 0;
+                }
+                else
+                {
+                    this[row, col] = c - '0';
+                }
+                col++;
+                if (col == GetCols())
+                {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
     }
 }

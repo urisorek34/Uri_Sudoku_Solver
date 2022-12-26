@@ -51,5 +51,15 @@ namespace UriSudokuSolver
                 board[row, col] = value;
             }
         }
+
+        public int GetRows()
+        {
+            return board.GetLength(0);
+        }
+
+        public int GetCols()
+        {
+            return board.GetLength(1);
+        }
     }
 }
