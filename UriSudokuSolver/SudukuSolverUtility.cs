@@ -5,11 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace UriSudokuSolver
-{
-
+{ 
     /*Sudoku solver static utility class.*/
     static class SudukuSolverUtility
     {
+       
+
+        /*Returns true if a value on the board is legal, false otherwise.*/
+        private static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
+        {
+            if (IsValidForCol(board, col, value) && IsValidForRow(board, row, value) && IsValidForSection(board, row, col, value))
+            {
+                return true;
+            }
+            return false;
+        }
 
         /*Check if the value is valid for the row.*/
         private static bool IsValidForRow(GameBoard<int> board, int row, int value)
@@ -42,11 +52,12 @@ namespace UriSudokuSolver
         /*Check if the value is valid for a section in the board.*/
         private static bool IsValidForSection(GameBoard<int> board, int row, int col, int value)
         {
-            int boxRow = row - row % 3;
-            int boxCol = col - col % 3;
-            for (int checkedRow = boxRow; checkedRow < boxRow + 3; checkedRow++)
+            int factor = (int)Math.Sqrt(board.GetRows());
+            int boxRow = row - row % factor;
+            int boxCol = col - col % factor;
+            for (int checkedRow = boxRow; checkedRow < boxRow + factor; checkedRow++)
             {
-                for (int checkedCol = boxCol; checkedCol < boxCol + 3; checkedCol++)
+                for (int checkedCol = boxCol; checkedCol < boxCol + factor; checkedCol++)
                 {
                     if (board[checkedRow, checkedCol] == value)
                     {
@@ -58,24 +69,18 @@ namespace UriSudokuSolver
         }
 
 
-        /// <summary>
-        /// Checks if the value is legal in specific place in the board
-        /// </summary>
-        /// <param name="board"> the board.</param>
-        /// <param name="row"> the row index.</param>
-        /// <param name="col"> the column index</param>
-        /// <param name="value"> the value that seposed to be placed in the place on the board.</param>
-        /// <returns>
-        /// true if legal, false otherwise.
-        /// </returns>
-        public static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
+        /*Return list of legal allowed values in place in the board*/
+        private static List<int> AllowedValues(SudokuBoard board, int minValue, int maxValue, int row, int col)
         {
-            if (IsValidForCol(board, col, value) && IsValidForRow(board, row, value) && IsValidForSection(board, row, col, value))
+            List<int> valuesList = new List<int>();
+            for (int value = minValue; value <= maxValue; value++)
             {
-                return true;
+                if (IsLegalValue(board, row, col, value))
+                    valuesList.Add(value);
             }
-            return false;
+            return valuesList;
         }
+
 
     }
 }
