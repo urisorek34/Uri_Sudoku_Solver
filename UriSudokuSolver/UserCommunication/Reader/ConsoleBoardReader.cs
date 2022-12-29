@@ -3,25 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.UserCommunication.Validation;
 
 namespace UriSudokuSolver
 {
     /*Class is responsable of reading a game board from the console.*/
-    class ConsoleBoardReader:IBoardReader
+    class ConsoleBoardReader : IBoardReader
     {
         private GameBoard<int> board;
+        private IValidator boardValidator;
 
         /*Constractor for the console board reader.*/
-        public ConsoleBoardReader(GameBoard<int> board)
+        public ConsoleBoardReader(GameBoard<int> board, string boardValidatorType)
         {
             this.board = board;
+            boardValidator = ValidationFactory.GetValidator(boardValidatorType);
         }
-        
+
         /*Function read a board from the console to the game board.*/
-        public void ReadBoard() 
+        public void ReadBoard()
         {
             string line = Console.ReadLine();
-            // TODO: check if the board is valid.
+            boardValidator.ValidateBoard(line,board.GetRows());
             board.FillBoard(line);
         }
     }
