@@ -9,6 +9,9 @@ namespace UriSudokuSolver.UserCommunication.Writer
     /*Interface for writing the sudoku game board.*/
     internal class SudokuBoardWriter : IBoardWriter
     {
+        public SudokuBoardWriter()
+        {
+        }
         /*Return a prity sudoku board string*/
         public string WriteBoard(GameBoard<char> board)
         {
