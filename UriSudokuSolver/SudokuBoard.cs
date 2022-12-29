@@ -27,19 +27,20 @@ namespace UriSudokuSolver
         public int GetMinValue() { return minValue; }
         public int GetMaxValue() { return maxValue; }
 
-        public void FillBoard(string b)
+        /*Function fill the board with the given string.*/
+        public override void FillBoard(string boardString)
         {
             int row = 0;
             int col = 0;
-            foreach (char c in b)
+            foreach (char c in boardString)
             {
                 if (c == '.')
                 {
-                    this[row, col] = 0;
+                    board[row, col] = 0;
                 }
                 else
                 {
-                    this[row, col] = c - '0';
+                    board[row, col] = c - '0';
                 }
                 col++;
                 if (col == GetCols())
