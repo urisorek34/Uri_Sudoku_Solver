@@ -58,7 +58,7 @@ namespace UriSudokuSolver
                     {
                         return true;
                     }
-                    board[row, col] = 0;
+                    board[row, col] = '0';
 
                 }
 

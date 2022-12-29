@@ -11,16 +11,16 @@ namespace UriSudokuSolver
     {
         private int minValue;
         private int maxValue;
-        
+
         /// <summary>
         /// Constractor for sudoku board.
         /// </summary>
         /// <param name="size"> the size of the board.</param>
         /// <param name="minValue"> the min value for the sudoko board</param>
-        public SudokuBoard(int size,int minValue) : base(size)
+        public SudokuBoard(int size, char minValue) : base(size)
         {
-            this.minValue = minValue;
-            this.maxValue = minValue + size - 1;
+            this.minValue = minValue + '0';
+            maxValue = minValue + size - 1;
         }
 
         //Getters for min and max values in the soduko.
