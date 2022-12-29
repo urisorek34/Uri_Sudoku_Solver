@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace UriSudokuSolver
 {
-    /*Interface for reading a game board.*/
-    internal interface IBoardReader
+    /*Interface for validating a game board.*/
+    internal interface IValidator
     {
-       public void ReadBoard();
+        public void ValidateBoard(string gameBoard, int size);
     }
 }

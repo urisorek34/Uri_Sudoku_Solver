@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace UriSudokuSolver
 {
-    /*Class is responsable of reading a game board from the console.s*/
+    /*Class is responsable of reading a game board from the console.*/
     class ConsoleBoardReader:IBoardReader
     {
         private GameBoard<int> board;
 
         /*Constractor for the console board reader.*/
-        public ConsoleBoardReader(SudokuBoard board)
+        public ConsoleBoardReader(GameBoard<int> board)
         {
             this.board = board;
         }
