@@ -24,7 +24,7 @@ namespace UriSudokuSolver
         public void ReadBoard()
         {
             string line = Console.ReadLine();
-            boardValidator.ValidateBoard(line,board.GetRows());
+            boardValidator.ValidateBoard(line);
             board.FillBoard(line);
         }
     }
