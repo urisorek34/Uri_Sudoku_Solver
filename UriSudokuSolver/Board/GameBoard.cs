@@ -9,7 +9,7 @@ namespace UriSudokuSolver
     /*Represent abstract game board*/
     abstract class GameBoard<T>
     {
-        
+
         protected T[,] board;
 
         /// <summary>
