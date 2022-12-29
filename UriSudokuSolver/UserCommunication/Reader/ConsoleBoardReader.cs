@@ -10,11 +10,11 @@ namespace UriSudokuSolver
     /*Class is responsable of reading a game board from the console.*/
     class ConsoleBoardReader : IBoardReader
     {
-        private GameBoard<int> board;
+        private GameBoard<char> board;
         private IValidator boardValidator;
 
         /*Constractor for the console board reader.*/
-        public ConsoleBoardReader(GameBoard<int> board, string boardValidatorType)
+        public ConsoleBoardReader(GameBoard<char> board, string boardValidatorType)
         {
             this.board = board;
             boardValidator = ValidationFactory.GetValidator(boardValidatorType);

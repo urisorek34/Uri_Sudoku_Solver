@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UriSudokuSolver
 {
     /*Sudoku board for the sudoko solver.*/
-    class SudokuBoard : GameBoard<int>
+    class SudokuBoard : GameBoard<char>
     {
         private int minValue;
         private int maxValue;
@@ -36,11 +36,11 @@ namespace UriSudokuSolver
             {
                 if (c == '.')
                 {
-                    board[row, col] = 0;
+                    board[row, col] = '0';
                 }
                 else
                 {
-                    board[row, col] = c - '0';
+                    board[row, col] = c;
                 }
                 col++;
                 if (col == GetCols())

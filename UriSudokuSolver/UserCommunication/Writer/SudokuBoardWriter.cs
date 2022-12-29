@@ -10,7 +10,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
     internal class SudokuBoardWriter : IBoardWriter
     {
         /*Return a prity sudoku board string*/
-        public string WriteBoard(GameBoard<int> board)
+        public string WriteBoard(GameBoard<char> board)
         {
             string boardString = "";
             int size = board.GetRows();

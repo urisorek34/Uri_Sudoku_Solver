@@ -11,10 +11,10 @@ namespace UriSudokuSolver.UserCommunication.Reader
     {
         private string filePath;
         private IValidator validator;
-        private GameBoard<int> board;
+        private GameBoard<char> board;
 
 
-        public FileBoardReader(GameBoard<int> board, string filePath, string validatorType)
+        public FileBoardReader(GameBoard<char> board, string filePath, string validatorType)
         {
             this.board = board;
             this.filePath = filePath;
