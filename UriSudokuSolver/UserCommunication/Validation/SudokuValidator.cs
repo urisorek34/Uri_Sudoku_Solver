@@ -10,6 +10,11 @@ namespace UriSudokuSolver
     /*Class responseble of validating the given input.*/
     internal class SudokuValidator : IValidator
     {
+        /*Empty constractor*/
+        public SudokuValidator()
+        {
+            
+        }
         /*Validation function for the sudoku given values of the board.*/
         public void ValidateBoard(string gameBoard, int size)
         {
