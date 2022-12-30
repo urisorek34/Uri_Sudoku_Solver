@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,9 +42,16 @@ namespace UriSudokuSolver.UserCommunication
             else
             {
                 sudokuReader = ReaderFactory.GetReader(readerType, gameType);
+                Console.WriteLine("Enter the board: ");
             }
-
+            
             board = sudokuReader.ReadBoard();
+            Console.WriteLine("The Board before solving: ");
+            Console.WriteLine(sudokuWriter.WriteBoard(board));
+
+            SolveBoard(board);
+            Console.WriteLine("The Board After solving: ");
+
             Console.WriteLine(sudokuWriter.WriteBoard(board));
 
         }
@@ -56,7 +64,7 @@ namespace UriSudokuSolver.UserCommunication
             Console.WriteLine("Please enter the type of input you want to use --> c for console, f for file: ");
             readerType = Console.ReadLine();
 
-            while (readerType.ToLower() != "c" || readerType.ToLower() != "f")
+            while (readerType.ToLower() != "c" && readerType.ToLower() != "f")
             {
                 Console.WriteLine("Please enter a valid input type --> c for console, f for file: ");
                 readerType = Console.ReadLine();
@@ -75,6 +83,18 @@ namespace UriSudokuSolver.UserCommunication
             Console.WriteLine("Please enter the path to the file you want to read from: ");
             return Console.ReadLine();
 
+        }
+
+        /*Solve the board and print the time it took.*/
+        private void SolveBoard(GameBoard <char> board)
+        {
+            SudokuSolver solver = new SudokuSolver((SudokuBoard)board); // need to create a genric function
+            Stopwatch sw = new Stopwatch();
+            Console.WriteLine("Solving sudoku board:");
+            sw.Start();
+            solver.Solve();
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds);
         }
     }
 }

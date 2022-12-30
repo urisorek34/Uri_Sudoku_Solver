@@ -26,7 +26,7 @@ namespace UriSudokuSolver
         {
             string line = Console.ReadLine();
             boardValidator.ValidateBoard(line);
-            GameBoard<char> board = GetRightBoard(line.Length);
+            GameBoard<char> board = GetRightBoard((int)Math.Sqrt(line.Length));
             board.FillBoard(line);
             return board;
         }

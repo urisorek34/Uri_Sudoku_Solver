@@ -29,7 +29,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
         {
             string gameBoard = File.ReadAllText(filePath);
             validator.ValidateBoard(gameBoard);
-            GameBoard<char> board = GetRightBoard(gameBoard.Length);
+            GameBoard<char> board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
             board.FillBoard(gameBoard);
             return board;
         }
