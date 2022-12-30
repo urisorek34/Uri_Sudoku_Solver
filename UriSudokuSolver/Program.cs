@@ -40,7 +40,7 @@
 
 //PrintBoard(board);
 using UriSudokuSolver.UserCommunication;
-const string GAME_TYPE = "sudoku";
+const EnumConstants.GameType GAME_TYPE = EnumConstants.GameType.SODOKU;
 
 
 ConsoleUserCommunication userCommunication = new ConsoleUserCommunication(GAME_TYPE);

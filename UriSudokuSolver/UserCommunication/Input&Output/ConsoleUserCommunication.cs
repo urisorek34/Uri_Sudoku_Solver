@@ -17,13 +17,13 @@ namespace UriSudokuSolver.UserCommunication
         private const string WELCOME_MESSAGE = "Welcome to Uri's Sudoku Solver! This Program will solve you any solvable board we'll bring with a square size!";
         private const string INSTRUCTIONS_MESSAGE = "Please enter the sudoku board you want to solve. Use 0 for empty spaces.";
 
-        private string gameType;
+        private EnumConstants.GameType gameType;
         private GameBoard<char> board;
         private IBoardReader sudokuReader;
         private IBoardWriter sudokuWriter;
 
         /*Constractor for user communication*/
-        public ConsoleUserCommunication(string gameType)
+        public ConsoleUserCommunication(EnumConstants.GameType gameType)
         {
             this.gameType = gameType;
             sudokuWriter = WriterFactory.GetWriter(gameType);
@@ -39,16 +39,16 @@ namespace UriSudokuSolver.UserCommunication
 
             string filePath = "";
             Console.WriteLine(WELCOME_MESSAGE);
-            string readerType = "";
+            EnumConstants.RedearType readerType = EnumConstants.RedearType.CONSOLE;
             // the main communication loop
-            while (readerType != "exit")
+            while (readerType != EnumConstants.RedearType.EXIT)
             {
                 Console.WriteLine(INSTRUCTIONS_MESSAGE);
                 readerType = GetTheReaderTypeFromUser();
                 sudokuReader = null;
                 board = null;
                 // address the reader as the right one.
-                if (readerType == "file")
+                if (readerType == EnumConstants.RedearType.FILE)
                 {
                     filePath = GetFilePath();
                     GetFileBoardReaderHandlingExceptions(readerType, filePath);
@@ -59,7 +59,7 @@ namespace UriSudokuSolver.UserCommunication
                         continue;
                     }
                 }
-                else if (readerType == "console")
+                else if (readerType == EnumConstants.RedearType.CONSOLE)
                 {
                     sudokuReader = ReaderFactory.GetReader(readerType, gameType);
                     Console.WriteLine("\nEnter the board: ");
@@ -78,14 +78,14 @@ namespace UriSudokuSolver.UserCommunication
                 }
 
                 SolveBoard(board);
-                
+
             }
-            
+
 
         }
 
         /*Gets the reader type from the user.*/
-        private string GetTheReaderTypeFromUser()
+        private EnumConstants.RedearType GetTheReaderTypeFromUser()
         {
             string readerType = "";
 
@@ -101,13 +101,13 @@ namespace UriSudokuSolver.UserCommunication
             switch (readerType.ToLower())
             {
                 case "c":
-                    return "console";
+                    return EnumConstants.RedearType.CONSOLE;
                 case "f":
-                    return "file";
+                    return EnumConstants.RedearType.FILE;
                 default:
-                    return "exit";
+                    return EnumConstants.RedearType.EXIT;
             }
-            
+
 
         }
 
@@ -120,7 +120,7 @@ namespace UriSudokuSolver.UserCommunication
         }
 
         /*Solve the board and print the time it took.*/
-        private void SolveBoard(GameBoard <char> board)
+        private void SolveBoard(GameBoard<char> board)
         {
             Console.WriteLine("The Board before solving: ");
             Console.WriteLine(sudokuWriter.WriteBoard(board));
@@ -132,14 +132,14 @@ namespace UriSudokuSolver.UserCommunication
             sw.Start();
             solver.Solve();
             sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds);
+            Console.WriteLine($"It took the algorithem {sw.ElapsedMilliseconds} ms to solve!\n");
 
             Console.WriteLine("The Board After solving: ");
             Console.WriteLine(sudokuWriter.WriteBoard(board));
         }
 
         /*Gets the file board reader with exception handling (file path not found exception and board not valid exception).*/
-        private void GetFileBoardReaderHandlingExceptions(string readerType,string filePath)
+        private void GetFileBoardReaderHandlingExceptions(EnumConstants.RedearType readerType, string filePath)
         {
             try
             {
@@ -150,6 +150,7 @@ namespace UriSudokuSolver.UserCommunication
                 Console.WriteLine($"File path {filePath} not found. please try again.");
             }
         }
+        /*Read to the sudoku board the values with exceptions handled*/
         private void ReadSudokuWithExceptionHandling()
         {
             try
@@ -163,7 +164,7 @@ namespace UriSudokuSolver.UserCommunication
 
         }
     }
-   
-   
+
+
 
 }

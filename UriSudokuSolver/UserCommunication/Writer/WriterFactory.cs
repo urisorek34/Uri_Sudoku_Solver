@@ -12,11 +12,11 @@ namespace UriSudokuSolver.UserCommunication.Writer
     internal class WriterFactory
     {
         /*Returns a new instance of a writer object depands on the given writer type.*/
-        public static IBoardWriter GetWriter(string writerType)
+        public static IBoardWriter GetWriter(EnumConstants.GameType writerType)
         {
             switch (writerType)
             {
-                case "sudoku":
+                case EnumConstants.GameType.SODOKU:
                     return new SudokuBoardWriter();
                 default:
                     throw new NoSuchGameException($"The Game {writerType} Not Found.");

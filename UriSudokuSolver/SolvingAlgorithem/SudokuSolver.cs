@@ -31,7 +31,7 @@ namespace UriSudokuSolver
                 Console.WriteLine("No solution!");
             }
         }
-        
+
         /*Function Solves the sudoku board using backtracking.*/
         private bool SolveOptimizedSudoku(Dictionary<(int, int), List<char>> cache)
         {

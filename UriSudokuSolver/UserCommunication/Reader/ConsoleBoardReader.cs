@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UriSudokuSolver.CustomExceptions;
+using UriSudokuSolver.UserCommunication;
 using UriSudokuSolver.UserCommunication.Validation;
 
 namespace UriSudokuSolver
@@ -12,10 +13,10 @@ namespace UriSudokuSolver
     class ConsoleBoardReader : IBoardReader
     {
         private IValidator boardValidator;
-        string boardType;
+        EnumConstants.GameType boardType;
 
         /*Constractor for the console board reader.*/
-        public ConsoleBoardReader(string boardType)
+        public ConsoleBoardReader(EnumConstants.GameType boardType)
         {
             this.boardType = boardType;
             boardValidator = ValidationFactory.GetValidator(boardType);
@@ -37,7 +38,7 @@ namespace UriSudokuSolver
         {
             switch (boardType)
             {
-                case "sudoku":
+                case EnumConstants.GameType.SODOKU:
                     return new SudokuBoard(size);
                 default:
                     throw new NoSuchGameException($"Invalid board type {boardType}.");

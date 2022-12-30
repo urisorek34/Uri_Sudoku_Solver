@@ -9,15 +9,15 @@ using UriSudokuSolver.UserCommunication.Validation;
 namespace UriSudokuSolver.UserCommunication.Reader
 {
     /*Class reads a board form a file.*/
-    internal class FileBoardReader: IBoardReader
+    internal class FileBoardReader : IBoardReader
     {
         private string filePath;
         private IValidator validator;
-        private string boardType;
+        private EnumConstants.GameType boardType;
 
 
         /*Constractor for the file board reader.*/
-        public FileBoardReader(string filePath, string boardType)
+        public FileBoardReader(string filePath, EnumConstants.GameType boardType)
         {
             this.boardType = boardType;
             this.filePath = filePath;
@@ -40,13 +40,13 @@ namespace UriSudokuSolver.UserCommunication.Reader
         {
             switch (boardType)
             {
-                case "sudoku":
+                case EnumConstants.GameType.SODOKU:
                     return new SudokuBoard(size);
                 default:
                     throw new NoSuchGameException($"Invalid board type {boardType}.");
             }
         }
-        
+
 
     }
 }

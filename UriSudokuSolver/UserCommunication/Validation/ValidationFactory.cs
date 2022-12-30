@@ -11,11 +11,11 @@ namespace UriSudokuSolver.UserCommunication.Validation
     internal static class ValidationFactory
     {
         /*Creates a validation object for a the Board reader.*/
-        public static IValidator GetValidator(string validationType)
+        public static IValidator GetValidator(EnumConstants.GameType validationType)
         {
             switch (validationType)
             {
-                case "sudoku":
+                case EnumConstants.GameType.SODOKU:
                     return new SudokuBoardValidator();
                 default:
                     throw new NoSuchGameException($"The Game {validationType} Not Found.");

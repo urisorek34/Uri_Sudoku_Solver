@@ -12,3 +12,4 @@ namespace UriSudokuSolver.UserCommunication
         public string WriteBoard(GameBoard<char> gameBoard);
     }
 }
+

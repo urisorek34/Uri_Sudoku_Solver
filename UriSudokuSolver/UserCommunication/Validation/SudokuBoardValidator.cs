@@ -13,7 +13,7 @@ namespace UriSudokuSolver
         /*Empty constractor*/
         public SudokuBoardValidator()
         {
-            
+
         }
         /*Validation function for the sudoku given values of the board.*/
         public void ValidateBoard(string gameBoard)

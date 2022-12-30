@@ -11,14 +11,14 @@ namespace UriSudokuSolver.UserCommunication.Reader
     internal class ReaderFactory
     {
         /*Creates a board reader according to the given reader type.*/
-        public static IBoardReader GetReader(string readerType,string boardType, string filePath = "")
+        public static IBoardReader GetReader(EnumConstants.RedearType readerType, EnumConstants.GameType boardType, string filePath = "")
         {
             switch (readerType)
             {
-                case "console":
+                case EnumConstants.RedearType.CONSOLE:
                     return new ConsoleBoardReader(boardType);
-                case "file":
-                    return new FileBoardReader(filePath,boardType);
+                case EnumConstants.RedearType.FILE:
+                    return new FileBoardReader(filePath, boardType);
                 default:
                     throw new NoSuchReadingTypeException($"Invalid reader type {readerType}.");
             }
