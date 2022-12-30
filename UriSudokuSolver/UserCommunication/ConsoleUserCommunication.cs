@@ -36,19 +36,19 @@ namespace UriSudokuSolver.UserCommunication
 
             if (readerType == "file")
             {
-                sudokuReader = ReaderFactory.GetReader(readerType, gameType, board, GetFilePath());
+                sudokuReader = ReaderFactory.GetReader(readerType, gameType, GetFilePath());
             }
             else
             {
-                sudokuReader = ReaderFactory.GetReader(readerType, gameType, board);
+                sudokuReader = ReaderFactory.GetReader(readerType, gameType);
             }
 
-            sudokuReader.ReadBoard();
-            sudokuWriter.WriteBoard(board);
+            board = sudokuReader.ReadBoard();
+            Console.WriteLine(sudokuWriter.WriteBoard(board));
 
         }
 
-        /**/
+        /*Gets the reader type from the user.*/
         private string GetTheReaderTypeFromUser()
         {
             string readerType = "";
@@ -72,7 +72,6 @@ namespace UriSudokuSolver.UserCommunication
         /*Function gets from the user the file path to read from.*/
         private string GetFilePath()
         {
-            string filePath = "";
             Console.WriteLine("Please enter the path to the file you want to read from: ");
             return Console.ReadLine();
 

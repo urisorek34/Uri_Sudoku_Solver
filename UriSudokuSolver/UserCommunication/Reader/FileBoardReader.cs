@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.CustomExceptions;
 using UriSudokuSolver.UserCommunication.Validation;
 
 namespace UriSudokuSolver.UserCommunication.Reader
@@ -12,24 +13,39 @@ namespace UriSudokuSolver.UserCommunication.Reader
     {
         private string filePath;
         private IValidator validator;
-        private GameBoard<char> board;
+        private string boardType;
 
 
         /*Constractor for the file board reader.*/
-        public FileBoardReader(GameBoard<char> board, string filePath, string validatorType)
+        public FileBoardReader(string filePath, string boardType)
         {
-            this.board = board;
+            this.boardType = boardType;
             this.filePath = filePath;
-            validator = ValidationFactory.GetValidator(validatorType);
+            validator = ValidationFactory.GetValidator(boardType);
         }
 
         /*Function reads a board from a file to the game board.*/
-        public void ReadBoard()
+        public GameBoard<char> ReadBoard()
         {
             string gameBoard = File.ReadAllText(filePath);
             validator.ValidateBoard(gameBoard);
+            GameBoard<char> board = GetRightBoard(gameBoard.Length);
             board.FillBoard(gameBoard);
+            return board;
         }
+
+        /*Function returns the right game board.*/
+        public GameBoard<char> GetRightBoard(int size)
+        {
+            switch (boardType)
+            {
+                case "sudoku":
+                    return new SudokuBoard(size);
+                default:
+                    throw new NoSuchGameException($"Invalid board type {boardType}.");
+            }
+        }
+        
 
     }
 }

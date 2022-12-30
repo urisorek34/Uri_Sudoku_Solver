@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.CustomExceptions;
 using UriSudokuSolver.UserCommunication.Validation;
 
 namespace UriSudokuSolver
@@ -10,22 +11,36 @@ namespace UriSudokuSolver
     /*Class is responsable of reading a game board from the console.*/
     class ConsoleBoardReader : IBoardReader
     {
-        private GameBoard<char> board;
         private IValidator boardValidator;
+        string boardType;
 
         /*Constractor for the console board reader.*/
-        public ConsoleBoardReader(GameBoard<char> board, string boardValidatorType)
+        public ConsoleBoardReader(string boardType)
         {
-            this.board = board;
-            boardValidator = ValidationFactory.GetValidator(boardValidatorType);
+            this.boardType = boardType;
+            boardValidator = ValidationFactory.GetValidator(boardType);
         }
 
         /*Function read a board from the console to the game board.*/
-        public void ReadBoard()
+        public GameBoard<char> ReadBoard()
         {
             string line = Console.ReadLine();
             boardValidator.ValidateBoard(line);
+            GameBoard<char> board = GetRightBoard(line.Length);
             board.FillBoard(line);
+            return board;
+        }
+
+        /*Function returns the right game board.*/
+        public GameBoard<char> GetRightBoard(int size)
+        {
+            switch (boardType)
+            {
+                case "sudoku":
+                    return new SudokuBoard(size);
+                default:
+                    throw new NoSuchGameException($"Invalid board type {boardType}.");
+            }
         }
     }
 }

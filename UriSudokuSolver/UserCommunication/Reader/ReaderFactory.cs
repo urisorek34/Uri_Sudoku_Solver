@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.CustomExceptions;
 
 namespace UriSudokuSolver.UserCommunication.Reader
 {
@@ -10,16 +11,16 @@ namespace UriSudokuSolver.UserCommunication.Reader
     internal class ReaderFactory
     {
         /*Creates a board reader according to the given reader type.*/
-        public static IBoardReader GetReader(string readerType,string validatorType,GameBoard<char> gameBoard, string filePath = "")
+        public static IBoardReader GetReader(string readerType,string boardType, string filePath = "")
         {
             switch (readerType)
             {
                 case "console":
-                    return new ConsoleBoardReader(gameBoard,validatorType);
+                    return new ConsoleBoardReader(boardType);
                 case "file":
-                    return new FileBoardReader(gameBoard,filePath,validatorType);
+                    return new FileBoardReader(filePath,boardType);
                 default:
-                    throw new ArgumentException("Invalid reader type.");
+                    throw new NoSuchReadingTypeException($"Invalid reader type {readerType}.");
             }
         }
     }
