@@ -26,7 +26,7 @@ namespace UriSudokuSolver
             {
                 for (int col = 0; col < board.GetCols(); col++)
                 {
-                    if (board[row, col] == 0)
+                    if (board[row, col] == '0')
                     {
                         cache.Add((row, col), AllowedValues(board, row, col));
                     }
@@ -53,7 +53,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < board.GetCols(); j++)
                 {
-                    if (board[i, j] == 0)
+                    if (board[i, j] == '0')
                     {
                         return (i, j);
                     }
