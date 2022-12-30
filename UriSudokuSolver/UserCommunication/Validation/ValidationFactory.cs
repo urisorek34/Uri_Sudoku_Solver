@@ -16,7 +16,7 @@ namespace UriSudokuSolver.UserCommunication.Validation
             switch (validationType)
             {
                 case "sudoku":
-                    return new SudokuValidator();
+                    return new SudokuBoardValidator();
                 default:
                     throw new NoSuchGameException($"The Game {validationType} Not Found.");
             }

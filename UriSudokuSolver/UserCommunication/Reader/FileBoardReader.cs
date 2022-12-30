@@ -31,6 +31,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
             validator.ValidateBoard(gameBoard);
             GameBoard<char> board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
             board.FillBoard(gameBoard);
+            board.ValidateBoard();
             return board;
         }
 

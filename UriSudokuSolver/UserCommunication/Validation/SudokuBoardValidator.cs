@@ -8,10 +8,10 @@ using UriSudokuSolver.CustomExceptions;
 namespace UriSudokuSolver
 {
     /*Class responseble of validating the given input.*/
-    internal class SudokuValidator : IValidator
+    internal class SudokuBoardValidator : IValidator
     {
         /*Empty constractor*/
-        public SudokuValidator()
+        public SudokuBoardValidator()
         {
             
         }

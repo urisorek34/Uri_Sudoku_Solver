@@ -62,5 +62,7 @@ namespace UriSudokuSolver
             return board.GetLength(1);
         }
         public abstract void FillBoard(string boardString);
+
+        public abstract void ValidateBoard();
     }
 }
