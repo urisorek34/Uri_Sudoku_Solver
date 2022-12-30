@@ -9,8 +9,8 @@ namespace UriSudokuSolver
     /*Represent abstract game board*/
     abstract class GameBoard<T>
     {
-        
-        private T[,] board;
+
+        protected T[,] board;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
@@ -61,5 +61,8 @@ namespace UriSudokuSolver
         {
             return board.GetLength(1);
         }
+        public abstract void FillBoard(string boardString);
+
+        public abstract void ValidateBoard();
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace UriSudokuSolver
-{ 
+{
     /*Sudoku solver static utility class.*/
     static class SudukuSolverUtility
     {
@@ -18,15 +18,15 @@ namespace UriSudokuSolver
         /// <returns>
         /// A dictionary of value tuples of places as key and list of optional values in that place.
         /// </returns>
-        public static Dictionary<(int, int), List<int>> CacheValidValues(SudokuBoard board)
+        public static Dictionary<(int, int), List<char>> CacheValidValues(SudokuBoard board)
         {
 
-            Dictionary<(int, int), List<int>> cache = new Dictionary<(int, int), List<int>>();
+            Dictionary<(int, int), List<char>> cache = new Dictionary<(int, int), List<char>>();
             for (int row = 0; row < board.GetRows(); row++)
             {
                 for (int col = 0; col < board.GetCols(); col++)
                 {
-                    if (board[row, col] == 0)
+                    if (board[row, col] == '0')
                     {
                         cache.Add((row, col), AllowedValues(board, row, col));
                     }
@@ -53,7 +53,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < board.GetCols(); j++)
                 {
-                    if (board[i, j] == 0)
+                    if (board[i, j] == '0')
                     {
                         return (i, j);
                     }
@@ -63,7 +63,7 @@ namespace UriSudokuSolver
         }
 
         /*Check if the value is valid for the row.*/
-        private static bool IsValidForRow(GameBoard<int> board, int row, int value)
+        private static bool IsValidForRow(GameBoard<char> board, int row, int value)
         {
             for (int col = 0; col < board.GetCols(); col++)
             {
@@ -77,7 +77,7 @@ namespace UriSudokuSolver
 
 
         /*Check if the value is valid for the column.*/
-        private static bool IsValidForCol(GameBoard<int> board, int col, int value)
+        private static bool IsValidForCol(GameBoard<char> board, int col, int value)
         {
             for (int row = 0; row < board.GetRows(); row++)
             {
@@ -91,7 +91,7 @@ namespace UriSudokuSolver
 
 
         /*Check if the value is valid for a section in the board.*/
-        private static bool IsValidForSection(GameBoard<int> board, int row, int col, int value)
+        private static bool IsValidForSection(GameBoard<char> board, int row, int col, int value)
         {
             int factor = (int)Math.Sqrt(board.GetRows());
             int boxRow = row - row % factor;
@@ -111,18 +111,18 @@ namespace UriSudokuSolver
 
 
         /*Return list of legal allowed values in place in the board*/
-        private static List<int> AllowedValues(SudokuBoard board, int row, int col)
+        private static List<char> AllowedValues(SudokuBoard board, int row, int col)
         {
-            List<int> valuesList = new List<int>();
+            List<char> valuesList = new List<char>();
             for (int value = board.GetMinValue(); value <= board.GetMaxValue(); value++)
             {
                 if (IsLegalValue(board, row, col, value))
-                    valuesList.Add(value);
+                    valuesList.Add((char)value);
             }
             return valuesList;
         }
 
-        
+
 
 
     }

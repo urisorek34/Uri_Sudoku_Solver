@@ -31,21 +31,19 @@ namespace UriSudokuSolver
                 Console.WriteLine("No solution!");
             }
         }
-        
+
         /*Function Solves the sudoku board using backtracking.*/
-        private bool SolveOptimizedSudoku(Dictionary<(int, int), List<int>> cache)
+        private bool SolveOptimizedSudoku(Dictionary<(int, int), List<char>> cache)
         {
 
             (int, int) blanck = SudukuSolverUtility.FindFirstEmpty(board);
             int row = blanck.Item1;
             int col = blanck.Item2;
-            
             // Recursion stoping condition.
             if (row == board.GetRows())
             {
                 return true;
             }
-
             // Go over all the options for each empty place in the board.
             for (int value = 0; value < cache[blanck].Count; value++)
             {
@@ -58,7 +56,7 @@ namespace UriSudokuSolver
                     {
                         return true;
                     }
-                    board[row, col] = 0;
+                    board[row, col] = '0';
 
                 }
 
