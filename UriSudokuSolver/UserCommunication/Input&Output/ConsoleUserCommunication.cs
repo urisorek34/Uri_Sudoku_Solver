@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.SolvingAlgorithem;
 using UriSudokuSolver.UserCommunication.Reader;
 using UriSudokuSolver.UserCommunication.Writer;
 
@@ -125,7 +126,7 @@ namespace UriSudokuSolver.UserCommunication
             Console.WriteLine("The Board before solving: ");
             Console.WriteLine(sudokuWriter.WriteBoard(board));
 
-            SudokuSolver solver = new SudokuSolver((SudokuBoard)board); // need to create a genric function
+            ISolver solver = SolverFactory.GetSolver(board,gameType); // need to create a genric function
             //calculating the time it took to solve
             Stopwatch sw = new Stopwatch();
             Console.WriteLine("Solving sudoku board:");
