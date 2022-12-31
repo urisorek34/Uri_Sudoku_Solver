@@ -26,7 +26,7 @@ namespace UriSudokuSolver
             {
                 for (int col = 0; col < board.GetCols(); col++)
                 {
-                    if (board[row, col] == '0')
+                    if (board[row, col].Value == '0')
                     {
                         cache.Add((row, col), AllowedValues(board, row, col));
                     }
@@ -53,7 +53,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < board.GetCols(); j++)
                 {
-                    if (board[i, j] == '0')
+                    if (board[i, j].Value == '0')
                     {
                         return (i, j);
                     }
@@ -63,11 +63,11 @@ namespace UriSudokuSolver
         }
 
         /*Check if the value is valid for the row.*/
-        private static bool IsValidForRow(GameBoard<char> board, int row, int value)
+        private static bool IsValidForRow(GameBoard board, int row, int value)
         {
             for (int col = 0; col < board.GetCols(); col++)
             {
-                if (board[row, col] == value)
+                if (board[row, col].Value == value)
                 {
                     return false;
                 }
@@ -77,11 +77,11 @@ namespace UriSudokuSolver
 
 
         /*Check if the value is valid for the column.*/
-        private static bool IsValidForCol(GameBoard<char> board, int col, int value)
+        private static bool IsValidForCol(GameBoard board, int col, int value)
         {
             for (int row = 0; row < board.GetRows(); row++)
             {
-                if (board[row, col] == value)
+                if (board[row, col].Value == value)
                 {
                     return false;
                 }
@@ -91,7 +91,7 @@ namespace UriSudokuSolver
 
 
         /*Check if the value is valid for a section in the board.*/
-        private static bool IsValidForSection(GameBoard<char> board, int row, int col, int value)
+        private static bool IsValidForSection(GameBoard board, int row, int col, int value)
         {
             int factor = (int)Math.Sqrt(board.GetRows());
             int boxRow = row - row % factor;
@@ -100,7 +100,7 @@ namespace UriSudokuSolver
             {
                 for (int checkedCol = boxCol; checkedCol < boxCol + factor; checkedCol++)
                 {
-                    if (board[checkedRow, checkedCol] == value)
+                    if (board[checkedRow, checkedCol].Value == value)
                     {
                         return false;
                     }

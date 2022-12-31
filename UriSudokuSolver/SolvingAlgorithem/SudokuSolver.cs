@@ -50,13 +50,13 @@ namespace UriSudokuSolver
 
                 if (SudukuSolverUtility.IsLegalValue(board, row, col, cache[blanck][value]))
                 {
-                    board[row, col] = cache[blanck][value];
+                    board[row, col].Value = cache[blanck][value];
 
                     if (SolveOptimizedSudoku(cache))
                     {
                         return true;
                     }
-                    board[row, col] = '0';
+                    board[row, col].Value = '0';
 
                 }
 

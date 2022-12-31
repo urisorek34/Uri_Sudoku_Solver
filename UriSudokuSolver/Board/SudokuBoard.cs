@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.Board;
 using UriSudokuSolver.CustomExceptions;
 
 namespace UriSudokuSolver
 {
     /*Sudoku board for the sudoko solver.*/
-    class SudokuBoard : GameBoard<char>
+    class SudokuBoard : GameBoard
     {
         private const int MIN_VALUE = 1 + '0';
 
@@ -33,14 +34,7 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
-                if (c == '.')
-                {
-                    board[row, col] = '0';
-                }
-                else
-                {
-                    board[row, col] = c;
-                }
+                board[row, col] = new SudokuCell(c, GetRows());
                 col++;
                 if (col == GetCols())
                 {
@@ -57,7 +51,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (board[i, j] != '0')
+                    if (board[i, j].Value != '0')
                     {
                         if (!CheckRow(i, j) || !CheckCol(i, j) || !CheckSquare(i, j))
                         {

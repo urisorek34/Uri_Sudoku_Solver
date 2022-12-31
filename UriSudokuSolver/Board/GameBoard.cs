@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.Board;
 
 namespace UriSudokuSolver
 {
     /*Represent abstract game board*/
-    abstract class GameBoard<T>
+    abstract class GameBoard
     {
 
-        protected T[,] board;
+        protected Cell[,] board;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
@@ -18,18 +19,18 @@ namespace UriSudokuSolver
         /// <param name="size">The size of the board.</param>
         public GameBoard(int size)
         {
-            board = new T[size, size];
+            board = new Cell[size, size];
         }
 
         public GameBoard(int rows, int cols)
         {
-            board = new T[rows, cols];
+            board = new Cell[rows, cols];
         }
 
         /*copy constractor*/
-        public GameBoard(T[,] board)
+        public GameBoard(Cell[,] board)
         {
-            this.board = new T[board.GetLength(0), board.GetLength(1)];
+            this.board = new Cell[board.GetLength(0), board.GetLength(1)];
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
@@ -40,7 +41,7 @@ namespace UriSudokuSolver
         }
 
         /*Indexer for the game board.*/
-        public T this[int row, int col]
+        public Cell this[int row, int col]
         {
             get
             {

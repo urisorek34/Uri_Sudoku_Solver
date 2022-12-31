@@ -23,18 +23,18 @@ namespace UriSudokuSolver
         }
 
         /*Function read a board from the console to the game board.*/
-        public GameBoard<char> ReadBoard()
+        public GameBoard ReadBoard()
         {
             string line = Console.ReadLine();
             boardValidator.ValidateBoard(line);
-            GameBoard<char> board = GetRightBoard((int)Math.Sqrt(line.Length));
+            GameBoard board = GetRightBoard((int)Math.Sqrt(line.Length));
             board.FillBoard(line);
             board.ValidateBoard();
             return board;
         }
 
         /*Function returns the right game board.*/
-        public GameBoard<char> GetRightBoard(int size)
+        public GameBoard GetRightBoard(int size)
         {
             switch (boardType)
             {

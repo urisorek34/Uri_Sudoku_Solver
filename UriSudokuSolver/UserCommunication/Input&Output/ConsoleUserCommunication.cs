@@ -18,7 +18,7 @@ namespace UriSudokuSolver.UserCommunication
         private const string INSTRUCTIONS_MESSAGE = "Please enter the sudoku board you want to solve. Use 0 for empty spaces.";
 
         private EnumConstants.GameType gameType;
-        private GameBoard<char> board;
+        private GameBoard board;
         private IBoardReader sudokuReader;
         private IBoardWriter sudokuWriter;
 
@@ -120,7 +120,7 @@ namespace UriSudokuSolver.UserCommunication
         }
 
         /*Solve the board and print the time it took.*/
-        private void SolveBoard(GameBoard<char> board)
+        private void SolveBoard(GameBoard board)
         {
             Console.WriteLine("The Board before solving: ");
             Console.WriteLine(sudokuWriter.WriteBoard(board));
