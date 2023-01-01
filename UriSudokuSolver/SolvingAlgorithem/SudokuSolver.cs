@@ -8,14 +8,14 @@ namespace UriSudokuSolver
 {
     class SudokuSolver : ISolver
     {
-        private SudokuBoard board;
+        private int[,] board;
         /// <summary>
         /// Initializes a new instance of the <see cref="SudokuSolver"/> class.
         /// </summary>
         /// <param name="board">The board.</param>
         public SudokuSolver(SudokuBoard board)
         {
-            this.board = board;
+            this.board = board.GetBoard();
 
         }
 
@@ -40,7 +40,7 @@ namespace UriSudokuSolver
             int row = blanck.Item1;
             int col = blanck.Item2;
             // Recursion stoping condition.
-            if (row == board.GetRows())
+            if (row == board.GetLength(0))
             {
                 return true;
             }
@@ -50,13 +50,13 @@ namespace UriSudokuSolver
 
                 if (SudukuSolverUtility.IsLegalValue(board, row, col, cache[blanck][value]))
                 {
-                    board[row, col].Value = cache[blanck][value];
+                    board[row, col] = cache[blanck][value];
 
                     if (SolveOptimizedSudoku(cache))
                     {
                         return true;
                     }
-                    board[row, col].Value = 0;
+                    board[row, col] = 0;
 
                 }
 

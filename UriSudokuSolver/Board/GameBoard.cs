@@ -11,7 +11,7 @@ namespace UriSudokuSolver
     abstract class GameBoard
     {
 
-        protected Cell[,] board;
+        protected int[,] board;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
@@ -19,18 +19,18 @@ namespace UriSudokuSolver
         /// <param name="size">The size of the board.</param>
         public GameBoard(int size)
         {
-            board = new Cell[size, size];
+            board = new int[size, size];
         }
 
         public GameBoard(int rows, int cols)
         {
-            board = new Cell[rows, cols];
+            board = new int[rows, cols];
         }
 
         /*copy constractor*/
-        public GameBoard(Cell[,] board)
+        public GameBoard(int[,] board)
         {
-            this.board = new Cell[board.GetLength(0), board.GetLength(1)];
+            this.board = new int[board.GetLength(0), board.GetLength(1)];
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
@@ -41,7 +41,7 @@ namespace UriSudokuSolver
         }
 
         /*Indexer for the game board.*/
-        public Cell this[int row, int col]
+        public int this[int row, int col]
         {
             get
             {
@@ -63,7 +63,7 @@ namespace UriSudokuSolver
             return board.GetLength(1);
         }
         /*Return instance of the board matrix */
-        public Cell[,] GetBoard()
+        public int[,] GetBoard()
         {
             return board;
         }

@@ -18,15 +18,15 @@ namespace UriSudokuSolver
         /// <returns>
         /// A dictionary of value tuples of places as key and list of optional values in that place.
         /// </returns>
-        public static Dictionary<(int, int), List<int>> CacheValidValues(SudokuBoard board)
+        public static Dictionary<(int, int), List<int>> CacheValidValues(int[,] board )
         {
 
             Dictionary<(int, int), List<int>> cache = new Dictionary<(int, int), List<int>>();
-            for (int row = 0; row < board.GetRows(); row++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int col = 0; col < board.GetCols(); col++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
-                    if (board[row, col].Value == 0)
+                    if (board[row, col] == 0)
                     {
                         cache.Add((row, col), AllowedValues(board, row, col));
                     }
@@ -37,7 +37,7 @@ namespace UriSudokuSolver
 
 
         /*Returns true if a value on the board is legal, false otherwise.*/
-        public static bool IsLegalValue(SudokuBoard board, int row, int col, int value)
+        public static bool IsLegalValue(int[,] board, int row, int col, int value)
         {
             if (IsValidForCol(board, col, value) && IsValidForRow(board, row, value) && IsValidForSection(board, row, col, value))
             {
@@ -47,27 +47,27 @@ namespace UriSudokuSolver
         }
 
         /*Find the first empty place in the board*/
-        public static (int, int) FindFirstEmpty(SudokuBoard board)
+        public static (int, int) FindFirstEmpty(int[,] board)
         {
-            for (int i = 0; i < board.GetRows(); i++)
+            for (int i = 0; i < board.GetLength(0); i++)
             {
-                for (int j = 0; j < board.GetCols(); j++)
+                for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j].Value == 0)
+                    if (board[i, j] == 0)
                     {
                         return (i, j);
                     }
                 }
             }
-            return (board.GetRows(), board.GetCols());
+            return (board.GetLength(0), board.GetLength(1));
         }
 
         /*Check if the value is valid for the row.*/
-        private static bool IsValidForRow(GameBoard board, int row, int value)
+        private static bool IsValidForRow(int[,] board, int row, int value)
         {
-            for (int col = 0; col < board.GetCols(); col++)
+            for (int col = 0; col < board.GetLength(1); col++)
             {
-                if (board[row, col].Value == value)
+                if (board[row, col] == value)
                 {
                     return false;
                 }
@@ -77,11 +77,11 @@ namespace UriSudokuSolver
 
 
         /*Check if the value is valid for the column.*/
-        private static bool IsValidForCol(GameBoard board, int col, int value)
+        private static bool IsValidForCol(int[,] board, int col, int value)
         {
-            for (int row = 0; row < board.GetRows(); row++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                if (board[row, col].Value == value)
+                if (board[row, col] == value)
                 {
                     return false;
                 }
@@ -91,16 +91,16 @@ namespace UriSudokuSolver
 
 
         /*Check if the value is valid for a section in the board.*/
-        private static bool IsValidForSection(GameBoard board, int row, int col, int value)
+        private static bool IsValidForSection(int[,] board, int row, int col, int value)
         {
-            int factor = (int)Math.Sqrt(board.GetRows());
+            int factor = (int)Math.Sqrt(board.GetLength(0));
             int boxRow = row - row % factor;
             int boxCol = col - col % factor;
             for (int checkedRow = boxRow; checkedRow < boxRow + factor; checkedRow++)
             {
                 for (int checkedCol = boxCol; checkedCol < boxCol + factor; checkedCol++)
                 {
-                    if (board[checkedRow, checkedCol].Value == value)
+                    if (board[checkedRow, checkedCol] == value)
                     {
                         return false;
                     }
@@ -111,10 +111,10 @@ namespace UriSudokuSolver
 
 
         /*Return list of legal allowed values in place in the board*/
-        private static List<int> AllowedValues(SudokuBoard board, int row, int col)
+        private static List<int> AllowedValues(int[,] board, int row, int col)
         {
             List<int> valuesList = new List<int>();
-            for (int value = board.GetMinValue(); value <= board.GetMaxValue(); value++)
+            for (int value = 1; value <= board.GetLength(0); value++)
             {
                 if (IsLegalValue(board, row, col, value))
                     valuesList.Add((char)value);
@@ -123,13 +123,13 @@ namespace UriSudokuSolver
         }
 
         /*Return the allowed bit mask for a place in the board*/
-        public static int AllowedBitMask(SudokuBoard board, int row, int col)
+        public static int AllowedBitMask(int[,] board, int row, int col)
         {
             int mask = 0;
-            for (int value = board.GetMinValue(); value <= board.GetMaxValue(); value++)
+            for (int value = 1; value <= board.GetLength(0); value++)
             {
                 if (IsLegalValue(board, row, col, value))
-                    mask |= 1 << (value - board.GetMinValue());
+                    mask |= 1 << (value - 1);
             }
             return mask;
         }
