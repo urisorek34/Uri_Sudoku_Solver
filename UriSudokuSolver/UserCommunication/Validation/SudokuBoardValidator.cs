@@ -20,7 +20,7 @@ namespace UriSudokuSolver
         {
             int size = gameBoard.Length;
             // check if can be a sudoku board of sizeXsize
-            if (Math.Sqrt(size) % 1 != 0)
+            if (Math.Sqrt(Math.Sqrt(size)) % 1 != 0)
             {
                 throw new BoardStringSizeIsNotValidException($"The size of the board {size} is not valid --> board size must be a square number");
             }

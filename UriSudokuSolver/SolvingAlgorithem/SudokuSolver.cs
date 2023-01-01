@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,23 +7,40 @@ using System.Threading.Tasks;
 
 namespace UriSudokuSolver
 {
+    /*Class for solving a sudoku in backtracking using bit board.*/
     class SudokuSolver : ISolver
     {
-        private SudokuBoard board;
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SudokuSolver"/> class.
-        /// </summary>
-        /// <param name="board">The board.</param>
+        // the board to solve
+        private int[,] board;
+        // a box size
+        private int sqrSize;
+        // valid values in a cell in a row represented by a binary number
+        private int[] validValuesRow;
+        // valid values in a cell in a column represented by a binary number
+        private int[] validValuesColumn;
+        // valid values in a cell in a box represented by a binary number
+        private int[] validValuesBox;
+        // masks for each value in the board
+        private int[] masks;
+
+        
+        /*Constractor for the solver. Initialize all the solver properties.*/
         public SudokuSolver(SudokuBoard board)
         {
-            this.board = board;
+            this.board = board.GetBoard();
+            this.sqrSize = (int)Math.Sqrt(board.GetRows());
+
+            // Initialize board masks
+            SudukuSolverUtility.InitializeBoardMasks(this.board, out masks);
+            // Initialize the valid values for each row, column and box
+            SudukuSolverUtility.GetValidValues(this.board, masks, out validValuesRow, out validValuesColumn, out validValuesBox);
 
         }
 
         /*Function tries to solve the sudoku board.*/
         public void Solve()
         {
-            if (SolveOptimizedSudoku(SudukuSolverUtility.CacheValidValues(board)))
+            if (SolveOptimizedSudoku())
             {
                 Console.WriteLine("Solved!");
             }
@@ -32,38 +50,60 @@ namespace UriSudokuSolver
             }
         }
 
-        /*Function Solves the sudoku board using backtracking.*/
-        private bool SolveOptimizedSudoku(Dictionary<(int, int), List<int>> cache)
+        /*Function Solves the sudoku board using backtracking using bit board.*/
+        private bool SolveOptimizedSudoku()
         {
+            int emptyCellRow, emptyCellCol;
+            // Find the cell with the minimum number of valid values
 
-            (int, int) blanck = SudukuSolverUtility.FindFirstEmpty(board);
-            int row = blanck.Item1;
-            int col = blanck.Item2;
-            // Recursion stoping condition.
-            if (row == board.GetRows())
+            int validValues = SudukuSolverUtility.FindBestEmptyCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, out emptyCellRow, out emptyCellCol);
+
+            if (emptyCellRow == -1)
             {
                 return true;
             }
-            // Go over all the options for each empty place in the board.
-            for (int value = 0; value < cache[blanck].Count; value++)
+           
+            // Try to solve the sudoku by assigning a value to the empty cell
+            for (int valueIndex = 0; valueIndex < board.GetLength(0); valueIndex++)
             {
-
-                if (SudukuSolverUtility.IsLegalValue(board, row, col, cache[blanck][value]))
+                // Check if is safe to try to assign the value to the empty cell
+                if (SudukuSolverUtility.IsSafe(emptyCellRow,emptyCellCol,valueIndex,validValuesRow,validValuesColumn,validValuesBox,masks,sqrSize))
                 {
-                    board[row, col].Value = cache[blanck][value];
+                    // Assign the value to the empty cell
+                    board[emptyCellRow, emptyCellCol] = valueIndex + 1;
+                    UpdateValidValues(emptyCellRow, emptyCellCol, valueIndex);
 
-                    if (SolveOptimizedSudoku(cache))
+                    // Try to solve the sudoku with the new value
+                    if (SolveOptimizedSudoku())
                     {
                         return true;
                     }
-                    board[row, col].Value = 0;
-
+                    
+                    //Undo the assignment after the recursive path failed
+                    board[emptyCellRow, emptyCellCol] = 0;
+                    RestoreValidValues(emptyCellRow, emptyCellCol, valueIndex);
                 }
-
+                
             }
-
             return false;
+        }
 
+        
+
+        /*Update the valid values for a cell.*/
+        private void UpdateValidValues(int row, int col, int value)
+        {
+            validValuesRow[row] |= masks[value];
+            validValuesColumn[col] |= masks[value];
+            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] |= masks[value];
+        }
+
+        /*Restore the valid values for a cell.*/
+        private void RestoreValidValues(int row, int col, int value)
+        {
+            validValuesRow[row] &= ~masks[value];
+            validValuesColumn[col] &= ~masks[value];
+            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] &= ~masks[value];
         }
 
     }

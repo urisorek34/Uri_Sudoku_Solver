@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UriSudokuSolver.Board;
 using UriSudokuSolver.CustomExceptions;
 
 namespace UriSudokuSolver
@@ -34,7 +33,7 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
-                board[row, col] = new SudokuCell(c - '0', GetRows());
+                board[row, col] = c - '0';
                 col++;
                 if (col == GetCols())
                 {
@@ -51,7 +50,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (board[i, j].Value != 0)
+                    if (board[i, j] != 0)
                     {
                         if (!CheckRow(i, j) || !CheckCol(i, j) || !CheckSquare(i, j))
                         {
