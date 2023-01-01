@@ -36,7 +36,7 @@ namespace UriSudokuSolver.UserCommunication
         public void Communicate()
         {
             // handling Control c pressed
-            Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs cancel) => { Console.WriteLine("Assuming the user wants to exit... Goodbye :))\n"); };
+            Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs cancel) => { Console.WriteLine("Assuming the user wants to exit... Goodbye, and thanks for all the fish:))\n"); };
 
             string filePath = "";
             Console.WriteLine(WELCOME_MESSAGE);
@@ -63,6 +63,7 @@ namespace UriSudokuSolver.UserCommunication
                 else
                 {
                     // if the user exits
+                    Console.WriteLine("Goodbye, and thanks for all the fish! :))\n");
                     break;
                 }
                 ReadSudokuWithExceptionHandling();

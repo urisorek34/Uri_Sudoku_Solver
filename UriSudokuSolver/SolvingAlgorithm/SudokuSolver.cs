@@ -48,6 +48,7 @@ namespace UriSudokuSolver
             {
                 Console.WriteLine("No solution!");
             }
+
         }
 
         /*Function Solves the sudoku board using backtracking using bit board.*/
@@ -55,7 +56,6 @@ namespace UriSudokuSolver
         {
             int emptyCellRow, emptyCellCol;
             // Find the cell with the minimum number of valid values
-
             int validValues = SudukuSolverUtility.FindBestEmptyCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, out emptyCellRow, out emptyCellCol);
 
             if (emptyCellRow == -1)

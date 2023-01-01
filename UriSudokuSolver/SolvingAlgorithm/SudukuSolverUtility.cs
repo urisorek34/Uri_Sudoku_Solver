@@ -67,21 +67,15 @@ namespace UriSudokuSolver
                         validValues = ~nonValidValuesRowColSqr;
                         // AND bit operator on the valid values and the sum of the valid values to get the number of valid values
                         validValues = validValues & ((1 << board.GetLength(0)) - 1);
-                        if (minValidValues == 1)
-                        {
-                            return 1;
-                        }
+                        
                         // find max valid values
                         if (CountBits(validValues) < minValidValues)
                         {
                             minValidValues = CountBits(validValues);
                             emptyCellRow = i;
                             emptyCellCol = j;
-                            if (minValidValues == 1)
-                            {
-                                return 1;
-                            }
                         }
+                        // If the cell has only one valid value return 1
                         if (minValidValues == 1)
                         {
                             return 1;
@@ -91,6 +85,8 @@ namespace UriSudokuSolver
             }
             return 0;
         }
+
+
         /*Count the number of bits in a binary number.*/
         private static int CountBits(int value)
         {
@@ -106,6 +102,7 @@ namespace UriSudokuSolver
         /*Check if a cell can be in a certian place.*/
         public static bool IsSafe(int row, int col, int value, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize)
         {
+            // Check with the AND bit operator on the mask of the value, if the value is valid in the row, column and box (if the 1 bit is on in the value index then it's not safe).
             return (validValuesRow[row] & masks[value]) == 0 &&
                     (validValuesColumn[col] & masks[value]) == 0 &&
                     (validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] & masks[value]) == 0;
