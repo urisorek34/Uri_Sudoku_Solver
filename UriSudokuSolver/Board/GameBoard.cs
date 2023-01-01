@@ -52,15 +52,20 @@ namespace UriSudokuSolver
                 board[row, col] = value;
             }
         }
-
+        /*Get board rows number of rows*/
         public int GetRows()
         {
             return board.GetLength(0);
         }
-
+        /*Get board number of cols*/
         public int GetCols()
         {
             return board.GetLength(1);
+        }
+        /*Return instance of the board matrix */
+        public Cell[,] GetBoard()
+        {
+            return board;
         }
         public abstract void FillBoard(string boardString);
 

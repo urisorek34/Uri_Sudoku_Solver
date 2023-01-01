@@ -35,7 +35,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
                     {
                         boardString += "|";
                     }
-                    boardString += board[i, j].Value;
+                    boardString += (char)(board[i, j].Value + '0');
                 }
                 boardString += "|";
                 if (i % sqrtSize == sqrtSize - 1)

@@ -33,7 +33,7 @@ namespace UriSudokuSolver
         }
 
         /*Function Solves the sudoku board using backtracking.*/
-        private bool SolveOptimizedSudoku(Dictionary<(int, int), List<char>> cache)
+        private bool SolveOptimizedSudoku(Dictionary<(int, int), List<int>> cache)
         {
 
             (int, int) blanck = SudukuSolverUtility.FindFirstEmpty(board);
@@ -56,7 +56,7 @@ namespace UriSudokuSolver
                     {
                         return true;
                     }
-                    board[row, col].Value = '0';
+                    board[row, col].Value = 0;
 
                 }
 

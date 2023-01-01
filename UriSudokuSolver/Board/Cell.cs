@@ -10,7 +10,7 @@ namespace UriSudokuSolver.Board
     abstract class Cell
     {
         /*The value of the cell.*/
-        public char Value { get; set; }
+        public int Value { get; set; }
         /*The row of the cell.*/
         public int Row { get; set; }
         /*The column of the cell.*/

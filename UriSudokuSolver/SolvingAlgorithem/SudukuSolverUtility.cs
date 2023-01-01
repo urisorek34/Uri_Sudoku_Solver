@@ -18,15 +18,15 @@ namespace UriSudokuSolver
         /// <returns>
         /// A dictionary of value tuples of places as key and list of optional values in that place.
         /// </returns>
-        public static Dictionary<(int, int), List<char>> CacheValidValues(SudokuBoard board)
+        public static Dictionary<(int, int), List<int>> CacheValidValues(SudokuBoard board)
         {
 
-            Dictionary<(int, int), List<char>> cache = new Dictionary<(int, int), List<char>>();
+            Dictionary<(int, int), List<int>> cache = new Dictionary<(int, int), List<int>>();
             for (int row = 0; row < board.GetRows(); row++)
             {
                 for (int col = 0; col < board.GetCols(); col++)
                 {
-                    if (board[row, col].Value == '0')
+                    if (board[row, col].Value == 0)
                     {
                         cache.Add((row, col), AllowedValues(board, row, col));
                     }
@@ -53,7 +53,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < board.GetCols(); j++)
                 {
-                    if (board[i, j].Value == '0')
+                    if (board[i, j].Value == 0)
                     {
                         return (i, j);
                     }
@@ -111,9 +111,9 @@ namespace UriSudokuSolver
 
 
         /*Return list of legal allowed values in place in the board*/
-        private static List<char> AllowedValues(SudokuBoard board, int row, int col)
+        private static List<int> AllowedValues(SudokuBoard board, int row, int col)
         {
-            List<char> valuesList = new List<char>();
+            List<int> valuesList = new List<int>();
             for (int value = board.GetMinValue(); value <= board.GetMaxValue(); value++)
             {
                 if (IsLegalValue(board, row, col, value))
@@ -121,6 +121,20 @@ namespace UriSudokuSolver
             }
             return valuesList;
         }
+
+        /*Return the allowed bit mask for a place in the board*/
+        public static int AllowedBitMask(SudokuBoard board, int row, int col)
+        {
+            int mask = 0;
+            for (int value = board.GetMinValue(); value <= board.GetMaxValue(); value++)
+            {
+                if (IsLegalValue(board, row, col, value))
+                    mask |= 1 << (value - board.GetMinValue());
+            }
+            return mask;
+        }
+        
+        
 
 
 

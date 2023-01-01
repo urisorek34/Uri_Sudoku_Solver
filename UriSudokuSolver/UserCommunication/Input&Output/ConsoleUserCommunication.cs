@@ -52,13 +52,8 @@ namespace UriSudokuSolver.UserCommunication
                 if (readerType == EnumConstants.RedearType.FILE)
                 {
                     filePath = GetFilePath();
-                    GetFileBoardReaderHandlingExceptions(readerType, filePath);
-                    // if the file path wasn't valid
-                    if (sudokuReader == null)
-                    {
-                        Console.WriteLine("You may try again!");
-                        continue;
-                    }
+                    sudokuReader = ReaderFactory.GetReader(readerType, gameType, filePath);
+
                 }
                 else if (readerType == EnumConstants.RedearType.CONSOLE)
                 {
@@ -139,18 +134,6 @@ namespace UriSudokuSolver.UserCommunication
             Console.WriteLine(sudokuWriter.WriteBoard(board));
         }
 
-        /*Gets the file board reader with exception handling (file path not found exception and board not valid exception).*/
-        private void GetFileBoardReaderHandlingExceptions(EnumConstants.RedearType readerType, string filePath)
-        {
-            try
-            {
-                sudokuReader = ReaderFactory.GetReader(readerType, gameType, filePath);
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine($"File path {filePath} not found. please try again.");
-            }
-        }
         /*Read to the sudoku board the values with exceptions handled*/
         private void ReadSudokuWithExceptionHandling()
         {
@@ -161,6 +144,14 @@ namespace UriSudokuSolver.UserCommunication
             catch (BoardNotValidException boardNotValid)
             {
                 Console.WriteLine(boardNotValid.Message);
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine($"File path not found. please try again.\n");
+            }
+            catch (IOException)
+            {
+                Console.WriteLine($"File path not found. please try again.\n");
             }
 
         }
