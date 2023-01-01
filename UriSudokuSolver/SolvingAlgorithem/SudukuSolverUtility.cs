@@ -48,7 +48,7 @@ namespace UriSudokuSolver
         }
 
         /*Finds the best empty cell.*/
-        public static int FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox,int sqrSize,out int emptyCellRow, out int emptyCellCol)
+        public static int FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, out int emptyCellRow, out int emptyCellCol)
         {
             emptyCellRow = -1;
             emptyCellCol = -1;
@@ -104,20 +104,12 @@ namespace UriSudokuSolver
         }
 
         /*Check if a cell can be in a certian place.*/
-        public static bool IsSafe(int row, int col, int value, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks,int sqrSize)
+        public static bool IsSafe(int row, int col, int value, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize)
         {
             return (validValuesRow[row] & masks[value]) == 0 &&
                     (validValuesColumn[col] & masks[value]) == 0 &&
                     (validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] & masks[value]) == 0;
         }
-
-
-
-
-
-
-
-
 
     }
 }
