@@ -82,7 +82,7 @@ namespace UriSudokuSolver
                 {
                     // Assign the value to the empty cell
                     board[emptyCellRow, emptyCellCol] = valueIndex + 1;
-                    UpdateValidValues(emptyCellRow, emptyCellCol, valueIndex);
+                    SudukuSolverUtility.UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, emptyCellRow, emptyCellCol, valueIndex+1);
 
                     // Try to solve the sudoku with the new value
                     if (SolveOptimizedSudoku())
@@ -97,13 +97,6 @@ namespace UriSudokuSolver
             return false;
         }
 
-        /*Update the valid values for a cell.*/
-        private void UpdateValidValues(int row, int col, int value)
-        {
-            validValuesRow[row] |= masks[value];
-            validValuesColumn[col] |= masks[value];
-            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] |= masks[value];
-        }
 
         /*Copy all the arrays to test arrays*/
         private void CopyToTestArrays(int[] testValidValuesRow, int[] testValidValuesColumn, int[] testValidValuesBox)

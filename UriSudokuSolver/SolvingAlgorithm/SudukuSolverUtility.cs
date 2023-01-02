@@ -26,22 +26,21 @@ namespace UriSudokuSolver
         /*Gets the valid values for each row column and box.*/
         public static void GetValidValues(int[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox)
         {
+            // create arrays
             int sqrSize = (int)Math.Sqrt(board.GetLength(0));
             validValuesRow = new int[board.GetLength(0)];
             validValuesColumn = new int[board.GetLength(0)];
             validValuesBox = new int[board.GetLength(0)];
 
             // Initialize the valid values for each row, column and box
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int j = 0; j < board.GetLength(0); j++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
-                    if (board[i, j] != 0)
+                    if (board[row, col] != 0)
                     {
                         // Set the valid value for the row col and box by using the OR operator to add the mask of the value to the valid values.
-                        validValuesRow[i] |= masks[board[i, j] - 1];
-                        validValuesColumn[j] |= masks[board[i, j] - 1];
-                        validValuesBox[(i / sqrSize) * sqrSize + j / sqrSize] |= masks[board[i, j] - 1];
+                        UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, board[row, col]);
                     }
                 }
             }
@@ -53,27 +52,23 @@ namespace UriSudokuSolver
             emptyCellRow = -1;
             emptyCellCol = -1;
             int minValidValues = board.GetLength(0) + 1;
-            int validValues, nonValidValuesRowColSqr;
+            int validValues;
             // Find the cell with the minimum number of valid values
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int j = 0; j < board.GetLength(0); j++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
-                    if (board[i, j] == 0)
+                    if (board[row, col] == 0)
                     {
-                        // OR bit operator on the unvalid values (bit in the index - 1 of the value is 1) of the row, column and box representing the valid values of the cell
-                        nonValidValuesRowColSqr = validValuesRow[i] | validValuesColumn[j] | validValuesBox[(i / sqrSize) * sqrSize + j / sqrSize];
-                        // NOT bit operator on the sum of the unvalid values to get the valid values
-                        validValues = ~nonValidValuesRowColSqr;
-                        // AND bit operator on the valid values and the sum of the valid values to get the number of valid values
-                        validValues = validValues & ((1 << board.GetLength(0)) - 1);
-                        
+
+                        validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col);
+
                         // find max valid values
                         if (CountBits(validValues) < minValidValues)
                         {
                             minValidValues = CountBits(validValues);
-                            emptyCellRow = i;
-                            emptyCellCol = j;
+                            emptyCellRow = row;
+                            emptyCellCol = col;
                         }
                         // If the cell has only one valid value return 1
                         if (minValidValues == 1)
@@ -83,6 +78,27 @@ namespace UriSudokuSolver
                     }
                 }
             }
+        }
+
+        /*Get valid values for a given cell.*/
+        private static int GetValidValuesForCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col)
+        {
+            // OR bit operator on the unvalid values (bit in the index - 1 of the value is 1) of the row, column and box representing the valid values of the cell
+            int nonValidValuesRowColSqr = validValuesRow[row] | validValuesColumn[col] | validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize];
+            // NOT bit operator on the sum of the unvalid values to get the valid values
+            int validValues = ~nonValidValuesRowColSqr;
+            // AND bit operator on the valid values and the sum of the valid values to get the number of valid values
+            validValues = validValues & ((1 << board.GetLength(0)) - 1);
+            return validValues;
+        }
+
+        /*updates valid values filed*/
+        public static void UpdateValidValues(int[,] board, int[] masks, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int value)
+        {
+            // Set the valid value for the row col and box by using the OR operator to add the mask of the value to the valid values.
+            validValuesRow[row] |= masks[value - 1];
+            validValuesColumn[col] |= masks[value - 1];
+            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] |= masks[value - 1];
         }
 
 
@@ -111,41 +127,42 @@ namespace UriSudokuSolver
         /*Hidden singles constraint--> find the cells in the board with only one option and update them in the board and the arrays*/
         public static void HiddenSingles(int[,] board, int[] allowedValuesRow, int[] allowedValuesCol, int[] allowedValuesBox, int[] masks, int sqrSize)
         {
-            int validValues, nonValidValuesRowColSqr;
+            int validValues, bitCount, value;
             // Find the cell with the minimum number of valid values
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int j = 0; j < board.GetLength(0); j++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
-                    if (board[i, j] == 0)
+                    // If the cell is empty
+                    if (board[row, col] == 0)
                     {
-                        // OR bit operator on the unvalid values (bit in the index - 1 of the value is 1) of the row, column and box representing the valid values of the cell
-                        nonValidValuesRowColSqr = allowedValuesRow[i] | allowedValuesCol[j] | allowedValuesBox[(i / sqrSize) * sqrSize + j / sqrSize];
-                        // NOT bit operator on the sum of the unvalid values to get the valid values
-                        validValues = ~nonValidValuesRowColSqr;
-                        // AND bit operator on the valid values and the sum of the valid values to get the number of valid values
-                        validValues = validValues & ((1 << board.GetLength(0)) - 1);
-                        // If the cell has only one valid value update the board and the arrays
-                        if (CountBits(validValues) == 1)
+                        validValues = GetValidValuesForCell(board, allowedValuesRow, allowedValuesCol, allowedValuesBox, sqrSize, row, col);
+                        bitCount = CountBits(validValues);
+                        if (bitCount == 1)
                         {
-                            int value = 0;
-                            while (validValues != 0)
-                            {
-                                validValues >>= 1;
-                                value++;
-                            }
-                            
-                            board[i, j] = value;
-                            allowedValuesRow[i] |= masks[value - 1];
-                            allowedValuesCol[j] |= masks[value - 1];
-                            allowedValuesBox[(i / sqrSize) * sqrSize + j / sqrSize] |= masks[value - 1];
+                            value = GetBitIndex(validValues);
+                            // update board and allowed values
+                            board[row, col] = value;
+                            UpdateValidValues(board, masks, allowedValuesRow, allowedValuesCol, allowedValuesBox, sqrSize, row, col, value);
                         }
                     }
                 }
             }
         }
-        
-           
+
+        /*Get value of in a binary number when has one option.*/
+        private static int GetBitIndex(int value)
+        {
+            int index = 0;
+            // count the number of bits until the value is 1 (valid value).
+            while (value != 0)
+            {
+                index++;
+                value >>= 1;
+            }
+            return index;
+        }
+
 
         /*Copy matrix*/
         public static int[,] CopyMatrix(int[,] matrix)
@@ -160,7 +177,7 @@ namespace UriSudokuSolver
             }
             return newMatrix;
         }
-        
+
 
     }
 }
