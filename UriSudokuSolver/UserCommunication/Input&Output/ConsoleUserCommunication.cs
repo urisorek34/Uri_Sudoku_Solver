@@ -127,7 +127,7 @@ namespace UriSudokuSolver.UserCommunication
             Stopwatch sw = new Stopwatch();
             Console.WriteLine("Solving sudoku board:");
             sw.Start();
-            solver.Solve();
+            board.SetBoard(solver.Solve());
             sw.Stop();
             Console.WriteLine($"It took the algorithem {sw.ElapsedMilliseconds} ms to solve!\n");
 

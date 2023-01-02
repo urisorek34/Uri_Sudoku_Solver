@@ -66,6 +66,10 @@ namespace UriSudokuSolver
         {
             return board;
         }
+        public void SetBoard(int[,] board)
+        {
+            this.board = board;
+        }
         public abstract void FillBoard(string boardString);
 
         public abstract void ValidateBoard();

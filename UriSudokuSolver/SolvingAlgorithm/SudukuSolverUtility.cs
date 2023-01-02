@@ -48,7 +48,7 @@ namespace UriSudokuSolver
         }
 
         /*Finds the best empty cell.*/
-        public static int FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, out int emptyCellRow, out int emptyCellCol)
+        public static void FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, out int emptyCellRow, out int emptyCellCol)
         {
             emptyCellRow = -1;
             emptyCellCol = -1;
@@ -78,12 +78,11 @@ namespace UriSudokuSolver
                         // If the cell has only one valid value return 1
                         if (minValidValues == 1)
                         {
-                            return 1;
+                            break;
                         }
                     }
                 }
             }
-            return 0;
         }
 
 
@@ -107,6 +106,61 @@ namespace UriSudokuSolver
                     (validValuesColumn[col] & masks[value]) == 0 &&
                     (validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] & masks[value]) == 0;
         }
+
+
+        /*Hidden singles constraint--> find the cells in the board with only one option and update them in the board and the arrays*/
+        public static void HiddenSingles(int[,] board, int[] allowedValuesRow, int[] allowedValuesCol, int[] allowedValuesBox, int[] masks, int sqrSize)
+        {
+            int validValues, nonValidValuesRowColSqr;
+            // Find the cell with the minimum number of valid values
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(0); j++)
+                {
+                    if (board[i, j] == 0)
+                    {
+                        // OR bit operator on the unvalid values (bit in the index - 1 of the value is 1) of the row, column and box representing the valid values of the cell
+                        nonValidValuesRowColSqr = allowedValuesRow[i] | allowedValuesCol[j] | allowedValuesBox[(i / sqrSize) * sqrSize + j / sqrSize];
+                        // NOT bit operator on the sum of the unvalid values to get the valid values
+                        validValues = ~nonValidValuesRowColSqr;
+                        // AND bit operator on the valid values and the sum of the valid values to get the number of valid values
+                        validValues = validValues & ((1 << board.GetLength(0)) - 1);
+                        // If the cell has only one valid value update the board and the arrays
+                        if (CountBits(validValues) == 1)
+                        {
+                            int value = 0;
+                            while (validValues != 0)
+                            {
+                                validValues >>= 1;
+                                value++;
+                            }
+                            
+                            board[i, j] = value;
+                            allowedValuesRow[i] |= masks[value - 1];
+                            allowedValuesCol[j] |= masks[value - 1];
+                            allowedValuesBox[(i / sqrSize) * sqrSize + j / sqrSize] |= masks[value - 1];
+                        }
+                    }
+                }
+            }
+        }
+        
+           
+
+        /*Copy matrix*/
+        public static int[,] CopyMatrix(int[,] matrix)
+        {
+            int[,] newMatrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    newMatrix[i, j] = matrix[i, j];
+                }
+            }
+            return newMatrix;
+        }
+        
 
     }
 }

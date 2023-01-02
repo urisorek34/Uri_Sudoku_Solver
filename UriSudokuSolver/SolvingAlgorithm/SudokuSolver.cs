@@ -23,7 +23,7 @@ namespace UriSudokuSolver
         // masks for each value in the board
         private int[] masks;
 
-        
+
         /*Constractor for the solver. Initialize all the solver properties.*/
         public SudokuSolver(SudokuBoard board)
         {
@@ -38,7 +38,7 @@ namespace UriSudokuSolver
         }
 
         /*Function tries to solve the sudoku board.*/
-        public void Solve()
+        public int[,] Solve()
         {
             if (SolveOptimizedSudoku())
             {
@@ -48,26 +48,37 @@ namespace UriSudokuSolver
             {
                 Console.WriteLine("No solution!");
             }
+            return board;
 
         }
 
         /*Function Solves the sudoku board using backtracking using bit board.*/
         private bool SolveOptimizedSudoku()
         {
+            // copy the current matrixes to the test matrixes 
+            int[,] testMatrix = SudukuSolverUtility.CopyMatrix(board);
+            int[] testValidValuesRow = new int[validValuesRow.Length];
+            int[] testValidValuesColumn = new int[validValuesColumn.Length];
+            int[] testValidValuesBox = new int[validValuesBox.Length];
+            CopyToTestArrays(testValidValuesRow, testValidValuesColumn, testValidValuesBox);
+
+            //Optimisation algorithms here 
+            SudukuSolverUtility.HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize);
+
             int emptyCellRow, emptyCellCol;
             // Find the cell with the minimum number of valid values
-            int validValues = SudukuSolverUtility.FindBestEmptyCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, out emptyCellRow, out emptyCellCol);
+            SudukuSolverUtility.FindBestEmptyCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, out emptyCellRow, out emptyCellCol);
 
             if (emptyCellRow == -1)
             {
                 return true;
             }
-           
+
             // Try to solve the sudoku by assigning a value to the empty cell
             for (int valueIndex = 0; valueIndex < board.GetLength(0); valueIndex++)
             {
                 // Check if is safe to try to assign the value to the empty cell
-                if (SudukuSolverUtility.IsSafe(emptyCellRow,emptyCellCol,valueIndex,validValuesRow,validValuesColumn,validValuesBox,masks,sqrSize))
+                if (SudukuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize))
                 {
                     // Assign the value to the empty cell
                     board[emptyCellRow, emptyCellCol] = valueIndex + 1;
@@ -78,17 +89,13 @@ namespace UriSudokuSolver
                     {
                         return true;
                     }
-                    
                     //Undo the assignment after the recursive path failed
-                    board[emptyCellRow, emptyCellCol] = 0;
-                    RestoreValidValues(emptyCellRow, emptyCellCol, valueIndex);
+                    RestoreInitialValues(testMatrix, testValidValuesRow, testValidValuesColumn, testValidValuesBox);
                 }
-                
+
             }
             return false;
         }
-
-        
 
         /*Update the valid values for a cell.*/
         private void UpdateValidValues(int row, int col, int value)
@@ -98,13 +105,23 @@ namespace UriSudokuSolver
             validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] |= masks[value];
         }
 
-        /*Restore the valid values for a cell.*/
-        private void RestoreValidValues(int row, int col, int value)
+        /*Copy all the arrays to test arrays*/
+        private void CopyToTestArrays(int[] testValidValuesRow, int[] testValidValuesColumn, int[] testValidValuesBox)
         {
-            validValuesRow[row] &= ~masks[value];
-            validValuesColumn[col] &= ~masks[value];
-            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] &= ~masks[value];
+            Array.Copy(validValuesRow, testValidValuesRow, validValuesRow.Length);
+            Array.Copy(validValuesBox, testValidValuesBox, validValuesBox.Length);
+            Array.Copy(validValuesColumn, testValidValuesColumn, validValuesColumn.Length);
         }
+
+        /*Restore arrays values if the recursion fails*/
+        private void RestoreInitialValues(int[,] testMatrix, int[] testValidValuesRow, int[] testValidValuesColumn, int[] testValidValuesBox)
+        {
+            board = testMatrix;
+            validValuesRow = testValidValuesRow;
+            validValuesColumn = testValidValuesColumn;
+            validValuesBox = testValidValuesBox;
+        }
+
 
     }
 }
