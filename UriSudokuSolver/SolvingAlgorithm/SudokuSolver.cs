@@ -31,9 +31,9 @@ namespace UriSudokuSolver
             this.sqrSize = (int)Math.Sqrt(board.GetRows());
 
             // Initialize board masks
-            SudukuSolverUtility.InitializeBoardMasks(this.board, out masks);
+            SudokuSolverUtility.InitializeBoardMasks(this.board, out masks);
             // Initialize the valid values for each row, column and box
-            SudukuSolverUtility.GetValidValues(this.board, masks, out validValuesRow, out validValuesColumn, out validValuesBox);
+            SudokuSolverUtility.GetValidValues(this.board, masks, out validValuesRow, out validValuesColumn, out validValuesBox);
 
         }
 
@@ -56,18 +56,16 @@ namespace UriSudokuSolver
         private bool SolveOptimizedSudoku()
         {
             // copy the current matrixes to the test matrixes 
-            int[,] testMatrix = SudukuSolverUtility.CopyMatrix(board);
+            int[,] testMatrix = SudokuSolverUtility.CopyMatrix(board);
             int[] testValidValuesRow = new int[validValuesRow.Length];
             int[] testValidValuesColumn = new int[validValuesColumn.Length];
             int[] testValidValuesBox = new int[validValuesBox.Length];
             CopyToTestArrays(testValidValuesRow, testValidValuesColumn, testValidValuesBox);
 
-            //Optimisation algorithms here 
-            SudukuSolverUtility.HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize);
 
             int emptyCellRow, emptyCellCol;
             // Find the cell with the minimum number of valid values
-            SudukuSolverUtility.FindBestEmptyCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, out emptyCellRow, out emptyCellCol);
+            SudokuSolverUtility.FindBestEmptyCell(board, validValuesRow, validValuesColumn, validValuesBox, masks ,sqrSize, out emptyCellRow, out emptyCellCol);
 
             if (emptyCellRow == -1)
             {
@@ -78,11 +76,11 @@ namespace UriSudokuSolver
             for (int valueIndex = 0; valueIndex < board.GetLength(0); valueIndex++)
             {
                 // Check if is safe to try to assign the value to the empty cell
-                if (SudukuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize))
+                if (SudokuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize))
                 {
                     // Assign the value to the empty cell
                     board[emptyCellRow, emptyCellCol] = valueIndex + 1;
-                    SudukuSolverUtility.UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, emptyCellRow, emptyCellCol, valueIndex+1);
+                    SudokuSolverUtility.UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, emptyCellRow, emptyCellCol, valueIndex+1);
 
                     // Try to solve the sudoku with the new value
                     if (SolveOptimizedSudoku())

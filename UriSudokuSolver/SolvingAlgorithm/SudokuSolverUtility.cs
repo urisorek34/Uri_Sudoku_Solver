@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace UriSudokuSolver
 {
     /*Sudoku solver static utility class.*/
-    static class SudukuSolverUtility
+    static class SudokuSolverUtility
     {
         /*Gets the board masks for a given board.*/
         public static void InitializeBoardMasks(int[,] board, out int[] masks)
@@ -47,12 +47,12 @@ namespace UriSudokuSolver
         }
 
         /*Finds the best empty cell.*/
-        public static void FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, out int emptyCellRow, out int emptyCellCol)
+        public static void FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, out int emptyCellRow, out int emptyCellCol)
         {
             emptyCellRow = -1;
             emptyCellCol = -1;
             int minValidValues = board.GetLength(0) + 1;
-            int validValues;
+            int validValues, bitCount, value;
             // Find the cell with the minimum number of valid values
             for (int row = 0; row < board.GetLength(0); row++)
             {
@@ -62,19 +62,20 @@ namespace UriSudokuSolver
                     {
 
                         validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col);
-
-                        // find max valid values
-                        if (CountBits(validValues) < minValidValues)
+                        bitCount = CountBits(validValues);
+                        // If the cell has only one valid value return 1
+                        if (validValues == 1)
                         {
-                            minValidValues = CountBits(validValues);
+                            HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
+                        }
+                        // find min valid values
+                        else if (bitCount < minValidValues)
+                        {
+                            minValidValues = bitCount;
                             emptyCellRow = row;
                             emptyCellCol = col;
                         }
-                        // If the cell has only one valid value return 1
-                        if (minValidValues == 1)
-                        {
-                            break;
-                        }
+
                     }
                 }
             }
@@ -124,30 +125,13 @@ namespace UriSudokuSolver
         }
 
 
-        /*Hidden singles constraint--> find the cells in the board with only one option and update them in the board and the arrays*/
-        public static void HiddenSingles(int[,] board, int[] allowedValuesRow, int[] allowedValuesCol, int[] allowedValuesBox, int[] masks, int sqrSize)
+        /*Hidden singles constraint--> update cell with only on posibile value*/
+        private static void HiddenSingles(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize,int row, int col, int validValues)
         {
-            int validValues, bitCount, value;
-            // Find the cell with the minimum number of valid values
-            for (int row = 0; row < board.GetLength(0); row++)
-            {
-                for (int col = 0; col < board.GetLength(1); col++)
-                {
-                    // If the cell is empty
-                    if (board[row, col] == 0)
-                    {
-                        validValues = GetValidValuesForCell(board, allowedValuesRow, allowedValuesCol, allowedValuesBox, sqrSize, row, col);
-                        bitCount = CountBits(validValues);
-                        if (bitCount == 1)
-                        {
-                            value = GetBitIndex(validValues);
-                            // update board and allowed values
-                            board[row, col] = value;
-                            UpdateValidValues(board, masks, allowedValuesRow, allowedValuesCol, allowedValuesBox, sqrSize, row, col, value);
-                        }
-                    }
-                }
-            }
+            int valueIndex = GetBitIndex(validValues);
+            // update board and allowed values
+            board[row, col] = valueIndex;
+            UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, valueIndex);
         }
 
         /*Get value of in a binary number when has one option.*/
