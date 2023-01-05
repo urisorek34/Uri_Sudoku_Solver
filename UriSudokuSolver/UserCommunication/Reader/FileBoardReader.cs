@@ -27,10 +27,14 @@ namespace UriSudokuSolver.UserCommunication.Reader
         /*Function reads a board from a file to the game board.*/
         public GameBoard ReadBoard()
         {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            // Get string board as input from the user.
             string gameBoard = File.ReadAllText(filePath);
+            // Make sure the string is valid.
             validator.ValidateBoard(gameBoard);
             GameBoard board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
             board.FillBoard(gameBoard);
+            // board chek if the board is legal.
             board.ValidateBoard();
             return board;
         }

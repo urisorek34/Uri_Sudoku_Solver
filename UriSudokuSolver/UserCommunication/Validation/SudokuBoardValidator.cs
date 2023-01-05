@@ -26,13 +26,13 @@ namespace UriSudokuSolver
             // check if can be a sudoku board of sizeXsize
             if (Math.Sqrt(Math.Sqrt(size)) % 1 != 0)
             {
-                throw new BoardStringSizeIsNotValidException($"The size of the board {size} is not valid --> board size must be a square number");
+                throw new BoardStringSizeIsNotValidException($"The size of the board {size} is not valid --> board string size must be (square number)^2");
             }
             // check if the given gameBoard contains any Ilegal chars
             char ilegalChar = CheckIlegalCharsInBoard(gameBoard);
             if (ilegalChar != '0')
             {
-                throw new BoardStringIlegalCharException($"The board has ilegal char/s in it the first one is {ilegalChar}");
+                throw new BoardStringIlegalCharException($"The board has ilegal chars in it the first one is {ilegalChar}");
             }
 
         }

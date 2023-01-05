@@ -22,5 +22,14 @@ namespace UriSudokuSolver.UserCommunication
             SODOKU
         }
 
+        /*Enum for user commands options.*/
+        public enum UserCommand
+        {
+            SOLVE,
+            RULES,
+            MENU,
+            EXIT
+        }
+
     }
 }
