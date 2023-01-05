@@ -33,7 +33,7 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
-                board[row, col] = c - '0';
+                board[row, col] = (byte)(c - '0');
                 col++;
                 if (col == GetCols())
                 {

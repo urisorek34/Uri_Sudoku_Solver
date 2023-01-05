@@ -11,7 +11,7 @@ namespace UriSudokuSolver
     class SudokuSolver : ISolver
     {
         // the board to solve
-        private int[,] board;
+        private byte[,] board;
         // a box size
         private int sqrSize;
         // valid values in a cell in a row represented by a binary number
@@ -24,7 +24,7 @@ namespace UriSudokuSolver
         private int[] masks;
         //result string
         private string _result;
-
+        // Stack for saving changes done to the board in the human tactics
         private Stack<int> _valuesSaver;
 
 
@@ -44,7 +44,7 @@ namespace UriSudokuSolver
         }
 
         /*Function tries to solve the sudoku board.*/
-        public int[,] Solve()
+        public byte[,] Solve()
         {
             if (SolveOptimizedSudoku())
             {
@@ -101,7 +101,7 @@ namespace UriSudokuSolver
                 if (SudokuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex - 1, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize))
                 {
                     // Assign the value to the empty cell
-                    board[emptyCellRow, emptyCellCol] = valueIndex;
+                    board[emptyCellRow, emptyCellCol] = (byte)valueIndex;
                     SudokuSolverUtility.UpdateValidValues(masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, emptyCellRow, emptyCellCol, valueIndex);
 
                     // Try to solve the sudoku with the new value

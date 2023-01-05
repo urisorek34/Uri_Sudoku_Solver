@@ -10,7 +10,7 @@ namespace UriSudokuSolver.Board
     /*Class for getting the result of the game*/
     internal class SudokuResult : IGameResult
     {
-        private int[,] _resultMatrixBoard;
+        private byte[,] _resultMatrixBoard;
         private GameBoard _sudokuBoard;
         private ISolver _sudokuSolver;
 

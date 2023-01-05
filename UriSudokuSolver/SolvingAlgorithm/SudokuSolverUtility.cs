@@ -13,7 +13,7 @@ namespace UriSudokuSolver
     static class SudokuSolverUtility
     {
         /*Gets the board masks for a given board.*/
-        public static void InitializeBoardMasks(int[,] board, out int[] masks)
+        public static void InitializeBoardMasks(byte[,] board, out int[] masks)
         {
             masks = new int[board.GetLength(0)];
 
@@ -26,7 +26,7 @@ namespace UriSudokuSolver
         }
 
         /*Set the valid values for each row column and box.*/
-        public static void SetValidValues(int[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox)
+        public static void SetValidValues(byte[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox)
         {
             // create arrays
             int sqrSize = (int)Math.Sqrt(board.GetLength(0));
@@ -49,7 +49,7 @@ namespace UriSudokuSolver
         }
 
         /*Finds the best empty cell.*/
-        public static void FindBestEmptyCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, out int emptyCellRow, out int emptyCellCol)
+        public static void FindBestEmptyCell(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, out int emptyCellRow, out int emptyCellCol)
         {
             emptyCellRow = -1;
             emptyCellCol = -1;
@@ -106,7 +106,7 @@ namespace UriSudokuSolver
 
 
         /*Get valid values for a given cell.*/
-        private static int GetValidValuesForCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col)
+        private static int GetValidValuesForCell(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col)
         {
             // OR bit operator on the unvalid values (bit in the index - 1 of the value is 1) of the row, column and box representing the valid values of the cell
             int nonValidValuesRowColSqr = validValuesRow[row] | validValuesColumn[col] | validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize];
@@ -151,11 +151,11 @@ namespace UriSudokuSolver
 
 
         /*Updates the board with a value */
-        public static void UpdateBoard(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
+        public static void UpdateBoard(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
         {
             int valueIndex = GetBitIndex(validValues);
             // update board and allowed values
-            board[row, col] = valueIndex;
+            board[row, col] = (byte)valueIndex;
             UpdateValidValues(masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, valueIndex);
         }
 
@@ -168,7 +168,7 @@ namespace UriSudokuSolver
         }
 
         /*Add value to valid values.*/
-        public static void AddValueToValidValues(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col)
+        public static void AddValueToValidValues(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col)
         {
             int value = board[row, col];
             // Set the valid value for the row col and box by using the XOR operator to add the mask of the value to the valid values.
@@ -178,11 +178,11 @@ namespace UriSudokuSolver
         }
 
         /*Try to solve board once with human tactics*/
-        public static int HumanTactics(Stack<int> savedValues, int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize)
+        public static int HumanTactics(Stack<int> savedValues, byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize)
         {
             // how many changes made
             int found = 0;
-            int validValues, bitCount, nakedSingles;
+            int validValues, bitCount, hiddenSingle;
             // Go over all the matrix and search empry spaces
             for (int row = 0; row < board.GetLength(0); row++)
             {
@@ -197,10 +197,10 @@ namespace UriSudokuSolver
                         bitCount = CountBits(validValues);
                         if (bitCount == 1)
                         {
-                            // if it has only one option (hidden singles) update the board with the option
+                            // if it has only one option (simple elimination) update the board with the option
                             UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-                            // push the changes into the stack
-                            savedValues.Push(row * 100 + col);
+                            // push the changes into the stack (pack the row and col into one int)
+                            savedValues.Push(row * board.GetLength(0) + col);
                             found++;
                             continue;
                         }
@@ -210,15 +210,15 @@ namespace UriSudokuSolver
                             CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found);
                             return -1;
                         }
-                        // try to search for naked singles
-                        nakedSingles = NakedSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-                        if (nakedSingles == 1)
+                        // try to search for hidden singles --> for cells that have an option that no other cell in the row, column or box can have
+                        hiddenSingle = HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
+                        if (hiddenSingle == 1)
                         {
                             // save the changes in the stack
-                            savedValues.Push(row * 100 + col);
+                            savedValues.Push(row * board.GetLength(0) + col);
                             found++;
                         }
-                        if (nakedSingles == -1)
+                        if (hiddenSingle == -1)
                         {
                             // if is empty and can't get valid values then the board is unsolvale
                             CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found);
@@ -232,21 +232,22 @@ namespace UriSudokuSolver
 
 
         /*Cleans the stack*/
-        public static void CleanStack(int[,] board, Stack<int> validStack, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int cellNum)
+        public static void CleanStack(byte[,] board, Stack<int> validStack, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int cellNum)
         {
-            int index;
+            int index, row, col;
             for (int i = 0; i < cellNum; i++)
             {
                 index = validStack.Pop();
-
+                row = index / board.GetLength(0);
+                col = index % board.GetLength(0);
                 //deletes from valide values arrays
-                AddValueToValidValues(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, index / 100, index % 100);
-                board[index / 100, index % 100] = 0;
+                AddValueToValidValues(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col);
+                board[row, col] = 0;
             }
 
         }
         /*The function get board, row and column of an empty cell and seek for its only value as naked single --> if it can't be in any other row col and box it has to be there.*/
-        public static int NakedSingles(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
+        public static int HiddenSingles(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
         {
             // Get the cell index in the box.
             int cellInBox = row % sqrSize * sqrSize + col % sqrSize;

@@ -10,7 +10,7 @@ namespace UriSudokuSolver
     abstract class GameBoard
     {
 
-        protected int[,] board;
+        protected byte[,] board;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
@@ -18,18 +18,18 @@ namespace UriSudokuSolver
         /// <param name="size">The size of the board.</param>
         public GameBoard(int size)
         {
-            board = new int[size, size];
+            board = new byte[size, size];
         }
 
         public GameBoard(int rows, int cols)
         {
-            board = new int[rows, cols];
+            board = new byte[rows, cols];
         }
 
         /*copy constractor*/
-        public GameBoard(int[,] board)
+        public GameBoard(byte[,] board)
         {
-            this.board = new int[board.GetLength(0), board.GetLength(1)];
+            this.board = new byte[board.GetLength(0), board.GetLength(1)];
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
@@ -40,7 +40,7 @@ namespace UriSudokuSolver
         }
 
         /*Indexer for the game board.*/
-        public int this[int row, int col]
+        public byte this[int row, int col]
         {
             get
             {
@@ -62,11 +62,11 @@ namespace UriSudokuSolver
             return board.GetLength(1);
         }
         /*Return instance of the board matrix */
-        public int[,] GetBoard()
+        public byte[,] GetBoard()
         {
             return board;
         }
-        public void SetBoard(int[,] board)
+        public void SetBoard(byte[,] board)
         {
             this.board = board;
         }

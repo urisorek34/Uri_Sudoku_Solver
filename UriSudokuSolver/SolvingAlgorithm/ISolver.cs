@@ -11,6 +11,6 @@ namespace UriSudokuSolver
     /// </summary>
     interface ISolver
     {
-        public int[,] Solve();
+        public byte[,] Solve();
     }
 }
