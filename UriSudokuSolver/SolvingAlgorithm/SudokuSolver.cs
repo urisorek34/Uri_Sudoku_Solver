@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.SolvingAlgorithm;
 
 namespace UriSudokuSolver
 {
@@ -72,7 +73,7 @@ namespace UriSudokuSolver
             int isSolved, totalChanged = 0;
             do
             {
-                isSolved = SudokuSolverUtility.HumanTactics(_valuesSaver, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize);
+                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize);
                 // If is solved is -1 there is no solution to the board 
                 if (isSolved == -1)
                 {
