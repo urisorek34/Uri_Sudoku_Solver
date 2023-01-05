@@ -67,7 +67,7 @@ namespace UriSudokuSolver.SolvingAlgorithm
 
 
 
-       
+
         /*The function get board, row and column of an empty cell and seek for its only value as naked single --> if it can't be in any other row col and box it has to be there.*/
         public static int HiddenSingles(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
         {
@@ -113,5 +113,5 @@ namespace UriSudokuSolver.SolvingAlgorithm
 
         }
     }
-    
+
 }

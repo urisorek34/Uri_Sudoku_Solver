@@ -16,19 +16,19 @@ namespace UriSudokuSolver.UserCommunication
         private const string WELCOME_MESSAGE = "Welcome to Uri's Sudoku Solver! This Program will solve you any solvable board we'll bring with a square size!";
         private const string INSTRUCTIONS_MESSAGE = "Please enter the sudoku board you want to solve. Use 0 for empty spaces.";
 
-        private EnumConstants.GameType gameType;
-        private GameBoard board;
-        private IBoardReader sudokuReader;
-        private IBoardWriter sudokuWriter;
-        private IGameResult gameResult;
+        private EnumConstants.GameType _gameType;
+        private GameBoard _board;
+        private IBoardReader _sudokuReader;
+        private IBoardWriter _sudokuWriter;
+        private IGameResult _gameResult;
 
         /*Constractor for user communication*/
         public ConsoleUserCommunication(EnumConstants.GameType gameType)
         {
-            this.gameType = gameType;
-            sudokuWriter = WriterFactory.GetWriter(gameType);
-            board = null;
-            sudokuReader = null;
+            _gameType = gameType;
+            _sudokuWriter = WriterFactory.GetWriter(gameType);
+            _board = null;
+            _sudokuReader = null;
         }
 
         /*This is the main function for communicating with the user.*/
@@ -45,17 +45,17 @@ namespace UriSudokuSolver.UserCommunication
             {
                 Console.WriteLine(INSTRUCTIONS_MESSAGE);
                 readerType = GetTheReaderTypeFromUser();
-                board = null;
+                _board = null;
                 // address the reader as the right one.
                 if (readerType == EnumConstants.RedearType.FILE)
                 {
                     filePath = GetFilePath();
-                    sudokuReader = ReaderFactory.GetReader(readerType, gameType, filePath);
+                    _sudokuReader = ReaderFactory.GetReader(readerType, _gameType, filePath);
 
                 }
                 else if (readerType == EnumConstants.RedearType.CONSOLE)
                 {
-                    sudokuReader = ReaderFactory.GetReader(readerType, gameType);
+                    _sudokuReader = ReaderFactory.GetReader(readerType, _gameType);
                     Console.WriteLine("\nEnter the board: ");
                 }
                 else
@@ -66,13 +66,13 @@ namespace UriSudokuSolver.UserCommunication
                 }
                 ReadSudokuWithExceptionHandling();
                 // if the given board wasn't valid
-                if (board == null)
+                if (_board == null)
                 {
                     Console.WriteLine("You may try again!");
                     continue;
                 }
 
-                SolveBoard(board);
+                SolveBoard(_board);
 
             }
 
@@ -118,18 +118,18 @@ namespace UriSudokuSolver.UserCommunication
         private void SolveBoard(GameBoard board)
         {
             Console.WriteLine("The Board before solving: ");
-            Console.WriteLine(sudokuWriter.WriteBoard(board));
+            Console.WriteLine(_sudokuWriter.WriteBoard(board));
 
-            ISolver solver = SolverFactory.GetSolver(board,gameType); // need to create a genric function
+            ISolver solver = SolverFactory.GetSolver(board, _gameType); // need to create a genric function
             //calculating the time it took to solve
             Stopwatch sw = new Stopwatch();
             Console.WriteLine("Solving sudoku board:");
-            gameResult = ResultFactory.GetResult(gameType, solver, board);
+            _gameResult = ResultFactory.GetResult(_gameType, solver, board);
             // Print the result
-            Console.WriteLine(gameResult.GetResult());
+            Console.WriteLine(_gameResult.GetResult());
 
             Console.WriteLine("The Board After solving: ");
-            Console.WriteLine(sudokuWriter.WriteBoard(board));
+            Console.WriteLine(_sudokuWriter.WriteBoard(board));
         }
 
         /*Read to the sudoku board the values with exceptions handled*/
@@ -137,7 +137,7 @@ namespace UriSudokuSolver.UserCommunication
         {
             try
             {
-                board = sudokuReader.ReadBoard();
+                _board = _sudokuReader.ReadBoard();
             }
             catch (BoardNotValidException boardNotValid)
             {

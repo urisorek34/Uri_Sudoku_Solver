@@ -91,8 +91,8 @@ namespace UriSudokuSolver
 
             }
         }
-        
-        
+
+
         /*Function checks if a  group is full*/
         private static bool CheckIfGroupFilled(int group, int size)
         {
