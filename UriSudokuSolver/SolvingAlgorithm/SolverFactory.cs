@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.CustomExceptions;
 using UriSudokuSolver.UserCommunication;
 
 namespace UriSudokuSolver.SolvingAlgorithem
@@ -18,7 +19,7 @@ namespace UriSudokuSolver.SolvingAlgorithem
                 case EnumConstants.GameType.SODOKU:
                     return new SudokuSolver((SudokuBoard)gameBoard);
                 default:
-                    throw new NotImplementedException();
+                    throw new NoSuchGameException("the game not exists.");
             }
         }
     }

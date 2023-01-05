@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,8 +25,8 @@ namespace UriSudokuSolver
             }
         }
 
-        /*Gets the valid values for each row column and box.*/
-        public static void GetValidValues(int[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox)
+        /*Set the valid values for each row column and box.*/
+        public static void SetValidValues(int[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox)
         {
             // create arrays
             int sqrSize = (int)Math.Sqrt(board.GetLength(0));
@@ -40,7 +42,7 @@ namespace UriSudokuSolver
                     if (board[row, col] != 0)
                     {
                         // Set the valid value for the row col and box by using the OR operator to add the mask of the value to the valid values.
-                        UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, board[row, col]);
+                        UpdateValidValues(masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, board[row, col]);
                     }
                 }
             }
@@ -52,34 +54,56 @@ namespace UriSudokuSolver
             emptyCellRow = -1;
             emptyCellCol = -1;
             int minValidValues = board.GetLength(0) + 1;
-            int validValues, bitCount, value;
+            int validValues, bitCount;
             // Find the cell with the minimum number of valid values
             for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int col = 0; col < board.GetLength(1); col++)
+                // check if the row is full
+                if (!CheckIfGroupFilled(validValuesRow[row], board.GetLength(0)))
                 {
-                    if (board[row, col] == 0)
+                    for (int col = 0; col < board.GetLength(1); col++)
                     {
-
-                        validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col);
-                        bitCount = CountBits(validValues);
-                        // If the cell has only one valid value return 1
-                        if (validValues == 1)
+                        if (board[row, col] == 0)
                         {
-                            HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-                        }
-                        // find min valid values
-                        else if (bitCount < minValidValues)
-                        {
-                            minValidValues = bitCount;
-                            emptyCellRow = row;
-                            emptyCellCol = col;
-                        }
 
+                            validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col);
+                            bitCount = CountBits(validValues);
+                            // If the empty cell doesn't have any valid values, then send this cell back 
+                            if (bitCount == 0)
+                            {
+                                // No valid values for the cell
+                                emptyCellRow = row;
+                                emptyCellCol = col;
+                                return;
+                            }
+
+                            // find min valid values
+                            else if (bitCount <= minValidValues)
+                            {
+                                minValidValues = bitCount;
+                                emptyCellRow = row;
+                                emptyCellCol = col;
+                            }
+
+                        }
                     }
                 }
+
             }
         }
+        
+        
+        /*Function checks if a  group is full*/
+        private static bool CheckIfGroupFilled(int group, int size)
+        {
+            int full = (int)Math.Pow(2, size) - 1;
+            // Check if the group is full
+            if (group == full)
+                return true;
+            return false;
+        }
+
+
 
         /*Get valid values for a given cell.*/
         private static int GetValidValuesForCell(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col)
@@ -94,7 +118,7 @@ namespace UriSudokuSolver
         }
 
         /*updates valid values filed*/
-        public static void UpdateValidValues(int[,] board, int[] masks, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int value)
+        public static void UpdateValidValues(int[] masks, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int value)
         {
             // Set the valid value for the row col and box by using the OR operator to add the mask of the value to the valid values.
             validValuesRow[row] |= masks[value - 1];
@@ -107,6 +131,7 @@ namespace UriSudokuSolver
         private static int CountBits(int value)
         {
             int count = 0;
+            // check how many bits by AND operation with the value and the value - 1 (example 00000100 & 00000011 = 00000000)
             while (value != 0)
             {
                 count++;
@@ -125,42 +150,147 @@ namespace UriSudokuSolver
         }
 
 
-        /*Hidden singles constraint--> update cell with only on posibile value*/
-        private static void HiddenSingles(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize,int row, int col, int validValues)
+        /*Updates the board with a value */
+        public static void UpdateBoard(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
         {
             int valueIndex = GetBitIndex(validValues);
             // update board and allowed values
             board[row, col] = valueIndex;
-            UpdateValidValues(board, masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, valueIndex);
+            UpdateValidValues(masks, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, valueIndex);
         }
 
         /*Get value of in a binary number when has one option.*/
         private static int GetBitIndex(int value)
         {
-            int index = 0;
-            // count the number of bits until the value is 1 (valid value).
-            while (value != 0)
-            {
-                index++;
-                value >>= 1;
-            }
-            return index;
+            // if it has only one bit then it's a power of 2
+            double powerOf2 = Math.Log(value, 2);
+            return (int)powerOf2 + 1;
         }
 
-
-        /*Copy matrix*/
-        public static int[,] CopyMatrix(int[,] matrix)
+        /*Add value to valid values.*/
+        public static void AddValueToValidValues(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col)
         {
-            int[,] newMatrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            int value = board[row, col];
+            // Set the valid value for the row col and box by using the XOR operator to add the mask of the value to the valid values.
+            validValuesRow[row] &= ~masks[value - 1];
+            validValuesColumn[col] &= ~masks[value - 1];
+            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] &= ~masks[value - 1];
+        }
+
+        /*Try to solve board once with human tactics*/
+        public static int HumanTactics(Stack<int> savedValues, int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize)
+        {
+            // how many changes made
+            int found = 0;
+            int validValues, bitCount, nakedSingles;
+            // Go over all the matrix and search empry spaces
+            for (int row = 0; row < board.GetLength(0); row++)
             {
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                for (int col = 0; col < board.GetLength(1); col++)
                 {
-                    newMatrix[i, j] = matrix[i, j];
+                    // if empty space
+                    if (board[row, col] == 0)
+                    {
+                        //get the values that this cell can get (in binary)
+                        validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col);
+                        // count them
+                        bitCount = CountBits(validValues);
+                        if (bitCount == 1)
+                        {
+                            // if it has only one option (hidden singles) update the board with the option
+                            UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
+                            // push the changes into the stack
+                            savedValues.Push(row * 100 + col);
+                            found++;
+                            continue;
+                        }
+                        if (bitCount == 0)
+                        {
+                            // if is empty and doesn't have valid values then the board is unsolvale
+                            CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found);
+                            return -1;
+                        }
+                        // try to search for naked singles
+                        nakedSingles = NakedSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
+                        if (nakedSingles == 1)
+                        {
+                            // save the changes in the stack
+                            savedValues.Push(row * 100 + col);
+                            found++;
+                        }
+                        if (nakedSingles == -1)
+                        {
+                            // if is empty and can't get valid values then the board is unsolvale
+                            CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found);
+                            return -1;
+                        }
+                    }
                 }
             }
-            return newMatrix;
+            return found;
         }
+
+
+        /*Cleans the stack*/
+        public static void CleanStack(int[,] board, Stack<int> validStack, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int cellNum)
+        {
+            int index;
+            for (int i = 0; i < cellNum; i++)
+            {
+                index = validStack.Pop();
+
+                //deletes from valide values arrays
+                AddValueToValidValues(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, index / 100, index % 100);
+                board[index / 100, index % 100] = 0;
+            }
+
+        }
+        /*The function get board, row and column of an empty cell and seek for its only value as naked single --> if it can't be in any other row col and box it has to be there.*/
+        public static int NakedSingles(int[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues)
+        {
+            // Get the cell index in the box.
+            int cellInBox = row % sqrSize * sqrSize + col % sqrSize;
+            int possibleInOtherCells = 0;
+            int rowInsideBox, colInsideBox, possibleForCell;
+            // check the box number
+            int boxNumber = (row - row % sqrSize) + (col - col % sqrSize) / sqrSize;
+            //Go over all the boxes in the board
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                //if the box is not the current box
+                if (i != cellInBox)
+                {
+                    //get the row and column of the cell inside the box
+                    rowInsideBox = sqrSize * (boxNumber / sqrSize) + i / sqrSize;
+                    colInsideBox = (boxNumber % sqrSize) * sqrSize + i % sqrSize;
+                    //if the cell is empty
+                    if (board[rowInsideBox, colInsideBox] == 0)
+                    {
+                        // add the valid values of the cell to the possible values for all the cells in the box
+                        possibleInOtherCells |= GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, rowInsideBox, colInsideBox);
+                    }
+                }
+
+            }
+            //if the cell has no valid values
+            possibleForCell = ~(~validValues | possibleInOtherCells);
+
+            //if the cell has only one valid value
+            if (CountBits(possibleForCell) == 1)
+            {
+                UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, possibleForCell);
+                return 1;
+            }
+            if (possibleForCell == 0)
+                return 0;
+            return -1;
+
+
+        }
+
+
+
+
 
 
     }

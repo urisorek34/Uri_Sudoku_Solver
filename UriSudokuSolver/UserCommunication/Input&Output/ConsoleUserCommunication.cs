@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.Board;
+using UriSudokuSolver.Result;
 using UriSudokuSolver.SolvingAlgorithem;
 using UriSudokuSolver.UserCommunication.Reader;
 using UriSudokuSolver.UserCommunication.Writer;
@@ -22,6 +24,7 @@ namespace UriSudokuSolver.UserCommunication
         private GameBoard board;
         private IBoardReader sudokuReader;
         private IBoardWriter sudokuWriter;
+        private IGameResult gameResult;
 
         /*Constractor for user communication*/
         public ConsoleUserCommunication(EnumConstants.GameType gameType)
@@ -126,10 +129,9 @@ namespace UriSudokuSolver.UserCommunication
             //calculating the time it took to solve
             Stopwatch sw = new Stopwatch();
             Console.WriteLine("Solving sudoku board:");
-            sw.Start();
-            board.SetBoard(solver.Solve());
-            sw.Stop();
-            Console.WriteLine($"It took the algorithem {sw.ElapsedMilliseconds} ms to solve!\n");
+            gameResult = ResultFactory.GetResult(gameType, solver, board);
+            // Print the result
+            Console.WriteLine(gameResult.GetResult());
 
             Console.WriteLine("The Board After solving: ");
             Console.WriteLine(sudokuWriter.WriteBoard(board));
