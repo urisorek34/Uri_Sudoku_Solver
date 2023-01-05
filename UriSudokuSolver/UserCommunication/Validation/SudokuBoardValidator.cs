@@ -19,6 +19,10 @@ namespace UriSudokuSolver
         public void ValidateBoard(string gameBoard)
         {
             int size = gameBoard.Length;
+            if (size == 0)
+            {
+                throw new BoardIsEmptyException("The board is empty. Avalid board have a square size.");
+            }
             // check if can be a sudoku board of sizeXsize
             if (Math.Sqrt(Math.Sqrt(size)) % 1 != 0)
             {
