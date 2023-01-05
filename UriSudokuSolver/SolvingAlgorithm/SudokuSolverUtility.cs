@@ -117,7 +117,7 @@ namespace UriSudokuSolver
             return validValues;
         }
 
-        /*updates valid values filed*/
+        /*updates valid values that is filled*/
         public static void UpdateValidValues(int[] masks, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int value)
         {
             // Set the valid value for the row col and box by using the OR operator to add the mask of the value to the valid values.
@@ -167,7 +167,7 @@ namespace UriSudokuSolver
             return (int)powerOf2 + 1;
         }
 
-        /*Add value to valid values.*/
+        /*Add value to valid values (remove value from board).*/
         public static void AddValueToValidValues(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col)
         {
             int value = board[row, col];
@@ -197,10 +197,7 @@ namespace UriSudokuSolver
                         bitCount = CountBits(validValues);
                         if (bitCount == 1)
                         {
-                            // if it has only one option (simple elimination) update the board with the option
-                            UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-                            // push the changes into the stack (pack the row and col into one int)
-                            savedValues.Push(row * board.GetLength(0) + col);
+                            UpdateAndPush(savedValues, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
                             found++;
                             continue;
                         }
@@ -212,10 +209,9 @@ namespace UriSudokuSolver
                         }
                         // try to search for hidden singles --> for cells that have an option that no other cell in the row, column or box can have
                         hiddenSingle = HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-                        if (hiddenSingle == 1)
+                        if (hiddenSingle > 0)
                         {
-                            // save the changes in the stack
-                            savedValues.Push(row * board.GetLength(0) + col);
+                            UpdateAndPush(savedValues, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, hiddenSingle);
                             found++;
                         }
                         if (hiddenSingle == -1)
@@ -230,6 +226,12 @@ namespace UriSudokuSolver
             return found;
         }
 
+        /*Update the board with a value and save the changes in the stack*/
+        private static void UpdateAndPush(Stack<int> savedValues, byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int value)
+        {
+            UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, value);
+            savedValues.Push(row * board.GetLength(0) + col);
+        }
 
         /*Cleans the stack*/
         public static void CleanStack(byte[,] board, Stack<int> validStack, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int cellNum)
@@ -273,15 +275,17 @@ namespace UriSudokuSolver
                 }
 
             }
-            //if the cell has no valid values
+            // get the possible values for the cell by using the NOT and OR bit operators to remove the possible values for all the cells in the box
             possibleForCell = ~(~validValues | possibleInOtherCells);
 
             //if the cell has only one valid value
             if (CountBits(possibleForCell) == 1)
             {
-                UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, possibleForCell);
-                return 1;
+                
+                return possibleForCell;
             }
+            
+            // if the cell has no valid values
             if (possibleForCell == 0)
                 return 0;
             return -1;

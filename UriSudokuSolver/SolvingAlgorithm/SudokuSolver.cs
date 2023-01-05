@@ -61,21 +61,19 @@ namespace UriSudokuSolver
         /*Function Solves the sudoku board using backtracking using bit board.*/
         private bool SolveOptimizedSudoku()
         {
-            // copy the current matrixes to the test matrixes 
-
-
-            // Human solving algorithm
+            // Backtracking using bit board and human solving tactics
             // 1. Find a cell with only one possible value
             // 2. Fill it with the value
             // 3. Repeat until no more cells with only one possible value
             // 4. If there are no more cells with only one possible value, find a cell with the least possible values
             // 5. Fill it with one of the possible values
             // 6. Repeat until the board is solved
-            // 7. If the board is not solved, backtrack and try another value
+
             int isSolved, totalChanged = 0;
             do
             {
                 isSolved = SudokuSolverUtility.HumanTactics(_valuesSaver, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize);
+                // If is solved is -1 there is no solution to the board 
                 if (isSolved == -1)
                 {
                     SudokuSolverUtility.CleanStack(board, _valuesSaver, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, totalChanged);
@@ -123,7 +121,7 @@ namespace UriSudokuSolver
 
 
 
-        /*To string function*/
+        /*To string function, return the result of the board.*/
         public override string ToString()
         {
             return _result;

@@ -45,7 +45,6 @@ namespace UriSudokuSolver.UserCommunication
             {
                 Console.WriteLine(INSTRUCTIONS_MESSAGE);
                 readerType = GetTheReaderTypeFromUser();
-                sudokuReader = null;
                 board = null;
                 // address the reader as the right one.
                 if (readerType == EnumConstants.RedearType.FILE)
