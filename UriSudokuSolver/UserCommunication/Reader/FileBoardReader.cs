@@ -25,18 +25,18 @@ namespace UriSudokuSolver.UserCommunication.Reader
         }
 
         /*Function reads a board from a file to the game board.*/
-        public GameBoard<char> ReadBoard()
+        public GameBoard ReadBoard()
         {
             string gameBoard = File.ReadAllText(filePath);
             validator.ValidateBoard(gameBoard);
-            GameBoard<char> board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
+            GameBoard board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
             board.FillBoard(gameBoard);
             board.ValidateBoard();
             return board;
         }
 
         /*Function returns the right game board.*/
-        public GameBoard<char> GetRightBoard(int size)
+        public GameBoard GetRightBoard(int size)
         {
             switch (boardType)
             {

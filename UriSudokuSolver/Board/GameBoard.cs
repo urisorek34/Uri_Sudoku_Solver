@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace UriSudokuSolver
 {
     /*Represent abstract game board*/
-    abstract class GameBoard<T>
+    abstract class GameBoard
     {
 
-        protected T[,] board;
+        protected byte[,] board;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
@@ -18,18 +18,18 @@ namespace UriSudokuSolver
         /// <param name="size">The size of the board.</param>
         public GameBoard(int size)
         {
-            board = new T[size, size];
+            board = new byte[size, size];
         }
 
         public GameBoard(int rows, int cols)
         {
-            board = new T[rows, cols];
+            board = new byte[rows, cols];
         }
 
         /*copy constractor*/
-        public GameBoard(T[,] board)
+        public GameBoard(byte[,] board)
         {
-            this.board = new T[board.GetLength(0), board.GetLength(1)];
+            this.board = new byte[board.GetLength(0), board.GetLength(1)];
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
@@ -40,7 +40,7 @@ namespace UriSudokuSolver
         }
 
         /*Indexer for the game board.*/
-        public T this[int row, int col]
+        public byte this[int row, int col]
         {
             get
             {
@@ -51,15 +51,24 @@ namespace UriSudokuSolver
                 board[row, col] = value;
             }
         }
-
+        /*Get board rows number of rows*/
         public int GetRows()
         {
             return board.GetLength(0);
         }
-
+        /*Get board number of cols*/
         public int GetCols()
         {
             return board.GetLength(1);
+        }
+        /*Return instance of the board matrix */
+        public byte[,] GetBoard()
+        {
+            return board;
+        }
+        public void SetBoard(byte[,] board)
+        {
+            this.board = board;
         }
         public abstract void FillBoard(string boardString);
 

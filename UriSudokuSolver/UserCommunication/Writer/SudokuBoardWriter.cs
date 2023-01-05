@@ -15,7 +15,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
         }
 
         /*Return a prity sudoku board string*/
-        public string WriteBoard(GameBoard<char> board)
+        public string WriteBoard(GameBoard board)
         {
             string boardString = "";
             int size = board.GetRows();
@@ -35,7 +35,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
                     {
                         boardString += "|";
                     }
-                    boardString += board[i, j];
+                    boardString += (char)(board[i, j] + '0');
                 }
                 boardString += "|";
                 if (i % sqrtSize == sqrtSize - 1)

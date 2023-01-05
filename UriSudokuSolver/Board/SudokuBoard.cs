@@ -8,9 +8,9 @@ using UriSudokuSolver.CustomExceptions;
 namespace UriSudokuSolver
 {
     /*Sudoku board for the sudoko solver.*/
-    class SudokuBoard : GameBoard<char>
+    class SudokuBoard : GameBoard
     {
-        private const int MIN_VALUE = 1 + '0';
+        private const int MIN_VALUE = 1;
 
         /// <summary>
         /// Constractor for sudoku board.
@@ -33,14 +33,7 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
-                if (c == '.')
-                {
-                    board[row, col] = '0';
-                }
-                else
-                {
-                    board[row, col] = c;
-                }
+                board[row, col] = (byte)(c - '0');
                 col++;
                 if (col == GetCols())
                 {
@@ -57,7 +50,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (board[i, j] != '0')
+                    if (board[i, j] != 0)
                     {
                         if (!CheckRow(i, j) || !CheckCol(i, j) || !CheckSquare(i, j))
                         {
@@ -113,6 +106,5 @@ namespace UriSudokuSolver
             return true;
         }
     }
-
 
 }

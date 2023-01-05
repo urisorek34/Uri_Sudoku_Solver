@@ -9,7 +9,7 @@ namespace UriSudokuSolver
     /*Interface for reading a game board.*/
     internal interface IBoardReader
     {
-        public GameBoard<char> ReadBoard();
-        public GameBoard<char> GetRightBoard(int size);
+        public GameBoard ReadBoard();
+        public GameBoard GetRightBoard(int size);
     }
 }
