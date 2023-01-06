@@ -9,7 +9,7 @@ namespace UriSudokuSolver.UserCommunication
     /*Interface for writing the solved board*/
     internal interface IBoardWriter
     {
-        public string WriteBoard(GameBoard gameBoard);
+        public void WriteBoard(GameBoard gameBoard);
     }
 }
 

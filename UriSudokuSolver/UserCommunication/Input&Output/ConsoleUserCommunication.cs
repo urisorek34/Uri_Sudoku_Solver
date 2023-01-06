@@ -136,7 +136,7 @@ namespace UriSudokuSolver.UserCommunication
             string menuOption;
             do
             {
-                Console.WriteLine("\nPlease enter valid choice: ");
+                Console.WriteLine("\nPlease enter valid choice (press 'm' for menu): ");
                 menuOption = Console.ReadLine();
             } while (menuOption != "s" && menuOption != "r" && menuOption != "m" && menuOption != "e");
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -170,19 +170,19 @@ namespace UriSudokuSolver.UserCommunication
         /*Solve the board and print the time it took.*/
         private void SolveBoard(GameBoard board)
         {
-            Console.WriteLine("The Board before solving: ");
-            Console.WriteLine(_sudokuWriter.WriteBoard(board));
+            Console.WriteLine("\nThe Board before solving: \n");
+            _sudokuWriter.WriteBoard(board);
 
             ISolver solver = SolverFactory.GetSolver(board, _gameType); // need to create a genric function
             //calculating the time it took to solve
             Stopwatch sw = new Stopwatch();
-            Console.WriteLine("Solving sudoku board:");
+            Console.WriteLine("Solving the sudoku board...\n\n\n");
             _gameResult = ResultFactory.GetResult(_gameType, solver, board);
             // Print the result
             Console.WriteLine(_gameResult.GetResult());
 
-            Console.WriteLine("The Board After solving: ");
-            Console.WriteLine(_sudokuWriter.WriteBoard(board));
+            Console.WriteLine("The Board After solving: \n");
+            _sudokuWriter.WriteBoard(board);
         }
 
         /*Read to the sudoku board the values with exceptions handled*/
@@ -237,17 +237,18 @@ namespace UriSudokuSolver.UserCommunication
             else if (readerType == RedearType.CONSOLE)
             {
                 _sudokuReader = ReaderFactory.GetReader(readerType, _gameType);
-                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine(INSTRUCTIONS_MESSAGE);
+                //Example of a board
                 Console.WriteLine("This board:");
                 Console.WriteLine(BOARD_EXAMPLE);
                 Console.WriteLine("\nBecome this board:\n");
                 _board = new SudokuBoard((int)Math.Sqrt(BOARD_EXAMPLE.Length));
                 _board.FillBoard(BOARD_EXAMPLE);
-                Console.WriteLine(_sudokuWriter.WriteBoard(_board));
+                _sudokuWriter.WriteBoard(_board);
                 _board = null;
                 Console.ResetColor();
-                Console.WriteLine("\nEnter the board: ");
+
+                Console.WriteLine("\nEnter the board:\n ");
             }
             else
             {

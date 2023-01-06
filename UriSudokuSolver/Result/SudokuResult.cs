@@ -41,7 +41,7 @@ namespace UriSudokuSolver.Board
             // Sets the board in the gameBoard reference.
             _sudokuBoard.SetBoard(_resultMatrixBoard);
             //return the result of the game
-            return "The sudoku has " + _sudokuSolver + "\nand it took " + sw.ElapsedMilliseconds + " milliseconds to solve.";
+            return "This sudoku board has " + _sudokuSolver + "\nIt took to the algorithm " + sw.ElapsedMilliseconds + " milliseconds to solve.";
 
         }
         /*Runs the solver in the direction of the bool parameter.*/

@@ -73,5 +73,6 @@ namespace UriSudokuSolver
         public abstract void FillBoard(string boardString);
 
         public abstract void ValidateBoard();
+        public abstract bool IsFull();
     }
 }

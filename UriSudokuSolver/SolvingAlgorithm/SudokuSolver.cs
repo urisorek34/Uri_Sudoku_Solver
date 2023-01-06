@@ -49,11 +49,11 @@ namespace UriSudokuSolver
         {
             if (SolveOptimizedSudoku())
             {
-                _result = "Solution!";
+                _result = "a valid solution!";
             }
             else
             {
-                _result = "No solution!";
+                _result = "no solution!";
             }
             return _board;
 
