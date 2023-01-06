@@ -15,7 +15,7 @@ namespace UriSudokuSolver.Board
         private ISolver _sudokuSolver;
 
         /*Constractor for the result of the game*/
-        public SudokuResult(ISolver sudokuSolver,GameBoard sudokuBoard)
+        public SudokuResult(ISolver sudokuSolver, GameBoard sudokuBoard)
         {
             _sudokuSolver = sudokuSolver;
             _sudokuBoard = sudokuBoard;
@@ -31,8 +31,8 @@ namespace UriSudokuSolver.Board
         /*Runs the solver in parallel --> once backwards once forward, with two differnt tasks. */
         private string RunSolverInParallel()
         {
-            
-            
+
+
             //calculating the time it took to solve
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -41,7 +41,7 @@ namespace UriSudokuSolver.Board
             // Sets the board in the gameBoard reference.
             _sudokuBoard.SetBoard(_resultMatrixBoard);
             //return the result of the game
-            return "The sudoku has " + _sudokuSolver + "\nand it took " + sw.ElapsedMilliseconds + " milliseconds to solve.";
+            return "This sudoku board has " + _sudokuSolver + "\nIt took to the algorithm " + sw.ElapsedMilliseconds + " milliseconds to solve.";
 
         }
         /*Runs the solver in the direction of the bool parameter.*/
@@ -52,5 +52,5 @@ namespace UriSudokuSolver.Board
 
 
     }
-    
+
 }

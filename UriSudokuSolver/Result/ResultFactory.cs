@@ -17,7 +17,7 @@ namespace UriSudokuSolver.Result
             switch (gameType)
             {
                 case EnumConstants.GameType.SODOKU:
-                    return new SudokuResult(solver,gameBoard);
+                    return new SudokuResult(solver, gameBoard);
                 default:
                     throw new NoSuchGameException("The game does not exists");
             }
