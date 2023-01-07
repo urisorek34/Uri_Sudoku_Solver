@@ -196,13 +196,9 @@ namespace UriSudokuSolver.UserCommunication
             {
                 Console.WriteLine(boardNotValid.Message);
             }
-            catch (FileNotFoundException)
+            catch (IlegalFilePathInputException ileaglePath)
             {
-                Console.WriteLine($"File path not found. please try again.\n");
-            }
-            catch (IOException)
-            {
-                Console.WriteLine($"File path not found. please try again.\n");
+                Console.WriteLine(ileaglePath.Message);
             }
             Console.ResetColor();
 

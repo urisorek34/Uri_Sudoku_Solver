@@ -42,7 +42,7 @@ namespace UriSudokuSolver
         {
             for (int i = 0; i < gameBoard.Length; i++)
             {
-                if (gameBoard[i] - '0' > gameBoard.Length || gameBoard[i] - '0' < 0)
+                if (gameBoard[i] - '0' > (int)Math.Sqrt(gameBoard.Length) || gameBoard[i] - '0' < 0)
                 {
                     return gameBoard[i];
                 }

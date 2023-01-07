@@ -29,7 +29,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             // Get string board as input from the user.
-            string gameBoard = File.ReadAllText(filePath);
+            string gameBoard = ReadFile();
             // Make sure the string is valid.
             validator.ValidateBoard(gameBoard);
             GameBoard board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
@@ -49,6 +49,33 @@ namespace UriSudokuSolver.UserCommunication.Reader
                 default:
                     throw new NoSuchGameException($"Invalid board type {boardType}.");
             }
+            
+        }
+
+        /*Read file with exception handling.*/
+        private string ReadFile()
+        {
+            try
+            {
+                return File.ReadAllText(filePath);
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+            }
+            catch (IOException)
+            {
+                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+            }
+            
         }
 
 
