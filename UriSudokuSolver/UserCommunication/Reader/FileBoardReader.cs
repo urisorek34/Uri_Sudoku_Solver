@@ -9,7 +9,7 @@ using UriSudokuSolver.UserCommunication.Validation;
 namespace UriSudokuSolver.UserCommunication.Reader
 {
     /*Class reads a board form a file.*/
-    internal class FileBoardReader : IBoardReader
+    public class FileBoardReader : IBoardReader
     {
         private string filePath;
         private IValidator validator;
