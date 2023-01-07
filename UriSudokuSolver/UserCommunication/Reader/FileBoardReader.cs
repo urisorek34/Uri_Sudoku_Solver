@@ -57,6 +57,10 @@ namespace UriSudokuSolver.UserCommunication.Reader
         {
             try
             {
+                if (!filePath.EndsWith(".txt"))
+                {
+                    throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+                }
                 return File.ReadAllText(filePath);
             }
             catch (FileNotFoundException e)
