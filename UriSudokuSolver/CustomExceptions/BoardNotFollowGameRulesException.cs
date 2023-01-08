@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 /*Exception when a board is not follow the rules of the game that he is representing.*/
 namespace UriSudokuSolver.CustomExceptions
 {
-    internal class BoardNotFollowGameRulesException : BoardNotValidException
+    public class BoardNotFollowGameRulesException : BoardNotValidException
     {
         public BoardNotFollowGameRulesException(string message) : base(message)
         {

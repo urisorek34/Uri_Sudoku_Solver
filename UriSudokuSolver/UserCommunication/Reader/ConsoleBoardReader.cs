@@ -10,7 +10,7 @@ using UriSudokuSolver.UserCommunication.Validation;
 namespace UriSudokuSolver
 {
     /*Class is responsable of reading a game board from the console.*/
-    class ConsoleBoardReader : IBoardReader
+    public class ConsoleBoardReader : IBoardReader
     {
         private IValidator boardValidator;
         EnumConstants.GameType boardType;

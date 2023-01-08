@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UriSudokuSolver.UserCommunication
 {
     /*Class for enum constants used in user communication.*/
-    internal static class EnumConstants
+    public static class EnumConstants
     {
         /*Enum for the different types of Readers.*/
         public enum RedearType

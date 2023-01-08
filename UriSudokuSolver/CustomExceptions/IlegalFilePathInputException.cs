@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace UriSudokuSolver.CustomExceptions
 {
-    /*Exception for empty board.*/
-    public class BoardIsEmptyException : BoardStringSizeIsNotValidException
+    /*Exception for when a file path is not valid.*/
+    public class IlegalFilePathInputException : GameException
     {
-        public BoardIsEmptyException(string message) : base(message)
+        public IlegalFilePathInputException(string message) : base(message)
         {
         }
     }
+    
 }

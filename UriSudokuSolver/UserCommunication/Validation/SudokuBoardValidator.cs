@@ -8,7 +8,7 @@ using UriSudokuSolver.CustomExceptions;
 namespace UriSudokuSolver
 {
     /*Class responseble of validating the given input.*/
-    internal class SudokuBoardValidator : IValidator
+    public class SudokuBoardValidator : IValidator
     {
         /*Empty constractor*/
         public SudokuBoardValidator()
@@ -21,7 +21,7 @@ namespace UriSudokuSolver
             int size = gameBoard.Length;
             if (size == 0)
             {
-                throw new BoardIsEmptyException("The board is empty. Avalid board have a square size.");
+                throw new BoardIsEmptyException("The board is empty. A valid board has a (square size)^2.");
             }
             // check if can be a sudoku board of sizeXsize
             if (Math.Sqrt(Math.Sqrt(size)) % 1 != 0)
@@ -42,7 +42,7 @@ namespace UriSudokuSolver
         {
             for (int i = 0; i < gameBoard.Length; i++)
             {
-                if (gameBoard[i] - '0' > gameBoard.Length || gameBoard[i] - '0' < 0)
+                if (gameBoard[i] - '0' > (int)Math.Sqrt(gameBoard.Length) || gameBoard[i] - '0' < 0)
                 {
                     return gameBoard[i];
                 }

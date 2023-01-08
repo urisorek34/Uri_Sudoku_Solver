@@ -8,7 +8,7 @@ using UriSudokuSolver.CustomExceptions;
 namespace UriSudokuSolver
 {
     /*Sudoku board for the sudoko solver.*/
-    class SudokuBoard : GameBoard
+    public class SudokuBoard : GameBoard
     {
         private const int MIN_VALUE = 1;
 
@@ -54,7 +54,7 @@ namespace UriSudokuSolver
                     {
                         if (!CheckRow(i, j) || !CheckCol(i, j) || !CheckSquare(i, j))
                         {
-                            throw new BoardNotFollowGameRulesException($"The board is not folowing the rules of sudoku (see example in index {i * j} in the string)");
+                            throw new BoardNotFollowGameRulesException($"The board is not folowing the rules of sudoku (press r to show the rules).");
                         }
                     }
                 }
@@ -120,6 +120,20 @@ namespace UriSudokuSolver
                 }
             }
             return true;
+        }
+
+        /*ToString return the board as a sring.*/
+        public override string ToString()
+        {
+            string boardString = "";
+            for (int i = 0; i < GetRows(); i++)
+            {
+                for (int j = 0; j < GetCols(); j++)
+                {
+                    boardString += (char)(_board[i, j] + '0');
+                }
+            }
+            return boardString;
         }
     }
 

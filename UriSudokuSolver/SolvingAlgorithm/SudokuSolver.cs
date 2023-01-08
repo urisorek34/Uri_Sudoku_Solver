@@ -9,7 +9,7 @@ using UriSudokuSolver.SolvingAlgorithm;
 namespace UriSudokuSolver
 {
     /*Class for solving a sudoku in backtracking using bit board.*/
-    class SudokuSolver : ISolver
+    public class SudokuSolver : ISolver
     {
         // the board to solve
         private byte[,] _board;

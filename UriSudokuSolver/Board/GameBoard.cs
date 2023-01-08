@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UriSudokuSolver
 {
     /*Represent abstract game board*/
-    abstract class GameBoard
+    public abstract class GameBoard
     {
 
         protected byte[,] _board;
