@@ -21,15 +21,9 @@ namespace UriSudokuSolver.Board
             _sudokuBoard = sudokuBoard;
         }
 
-        /*Get the result of the game in string format*/
+
+        /*Runs the solver and return the result with solution time.*/
         public string GetResult()
-        {
-            return RunSolverInParallel();
-        }
-
-
-        /*Runs the solver in parallel --> once backwards once forward, with two differnt tasks. */
-        private string RunSolverInParallel()
         {
 
 
@@ -41,7 +35,7 @@ namespace UriSudokuSolver.Board
             // Sets the board in the gameBoard reference.
             _sudokuBoard.SetBoard(_resultMatrixBoard);
             //return the result of the game
-            return "This sudoku board has " + _sudokuSolver + "\nIt took to the algorithm " + sw.ElapsedMilliseconds + " milliseconds to solve.";
+            return "This sudoku board has " + _sudokuSolver + "\nIt took to the algorithm " + sw.ElapsedMilliseconds + " milliseconds to solve.\n\n\nThe board in a string format:\n" + _sudokuBoard + "\n\n\n";
 
         }
         /*Runs the solver in the direction of the bool parameter.*/

@@ -121,6 +121,20 @@ namespace UriSudokuSolver
             }
             return true;
         }
+
+        /*ToString return the board as a sring.*/
+        public override string ToString()
+        {
+            string boardString = "";
+            for (int i = 0; i < GetRows(); i++)
+            {
+                for (int j = 0; j < GetCols(); j++)
+                {
+                    boardString += (char)(_board[i, j] + '0');
+                }
+            }
+            return boardString;
+        }
     }
 
 }

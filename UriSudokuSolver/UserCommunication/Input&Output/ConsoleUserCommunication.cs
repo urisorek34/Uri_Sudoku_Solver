@@ -175,14 +175,24 @@ namespace UriSudokuSolver.UserCommunication
 
             ISolver solver = SolverFactory.GetSolver(board, _gameType); // need to create a genric function
             //calculating the time it took to solve
-            Stopwatch sw = new Stopwatch();
             Console.WriteLine("Solving the sudoku board...\n\n\n");
             _gameResult = ResultFactory.GetResult(_gameType, solver, board);
             // Print the result
-            Console.WriteLine(_gameResult.GetResult());
-
+            string result = _gameResult.GetResult();
+            
+            if (board.IsFull())
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            Console.WriteLine(result);
+            Console.ResetColor();
             Console.WriteLine("The Board After solving: \n");
             _sudokuWriter.WriteBoard(board);
+            
         }
 
         /*Read to the sudoku board the values with exceptions handled*/

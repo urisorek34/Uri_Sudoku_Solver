@@ -76,7 +76,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
 
                 }
 
-                Console.Write("---");
+                Console.Write("———");
                 Console.ResetColor();
 
 
