@@ -33,7 +33,7 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
-                _board[row, col] = (byte)(c - '0');
+                board[row, col] = (byte)(c - '0');
                 col++;
                 if (col == GetCols())
                 {
@@ -50,7 +50,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (_board[i, j] != 0)
+                    if (board[i, j] != 0)
                     {
                         if (!CheckRow(i, j) || !CheckCol(i, j) || !CheckSquare(i, j))
                         {
@@ -66,7 +66,7 @@ namespace UriSudokuSolver
         {
             for (int i = 0; i < GetCols(); i++)
             {
-                if (i != col && _board[row, i] == _board[row, col])
+                if (i != col && board[row, i] == board[row, col])
                 {
                     return false;
                 }
@@ -79,7 +79,7 @@ namespace UriSudokuSolver
         {
             for (int i = 0; i < GetRows(); i++)
             {
-                if (i != row && _board[i, col] == _board[row, col])
+                if (i != row && board[i, col] == board[row, col])
                 {
                     return false;
                 }
@@ -97,7 +97,7 @@ namespace UriSudokuSolver
             {
                 for (int j = squareCol * squareSize; j < (squareCol + 1) * squareSize; j++)
                 {
-                    if (i != row && j != col && _board[i, j] == _board[row, col])
+                    if (i != row && j != col && board[i, j] == board[row, col])
                     {
                         return false;
                     }
@@ -113,7 +113,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (_board[i, j] == 0)
+                    if (board[i, j] == 0)
                     {
                         return false;
                     }
@@ -130,7 +130,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    boardString += (char)(_board[i, j] + '0');
+                    boardString += (char)(board[i, j] + '0');
                 }
             }
             return boardString;

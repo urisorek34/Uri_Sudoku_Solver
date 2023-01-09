@@ -10,6 +10,8 @@ namespace UriSudokuSolver
     /*Class responseble of validating the given input.*/
     public class SudokuBoardValidator : IValidator
     {
+
+        private const int MAX_STRING_SIZE = 25 * 25;
         /*Empty constractor*/
         public SudokuBoardValidator()
         {
@@ -19,9 +21,15 @@ namespace UriSudokuSolver
         public void ValidateBoard(string gameBoard)
         {
             int size = gameBoard.Length;
+            // check if the string is empty
             if (size == 0)
             {
                 throw new BoardIsEmptyException("The board is empty. A valid board has a (square size)^2.");
+            }
+            // check if the string is too long
+            if (size > MAX_STRING_SIZE)
+            {
+                throw new BoardStringSizeIsNotValidException($"The board is too big. The max size is {MAX_STRING_SIZE} --> 25X25.");
             }
             // check if can be a sudoku board of sizeXsize
             if (Math.Sqrt(Math.Sqrt(size)) % 1 != 0)

@@ -10,7 +10,7 @@ namespace UriSudokuSolver
     public abstract class GameBoard
     {
 
-        protected byte[,] _board;
+        protected byte[,] board;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
@@ -18,23 +18,23 @@ namespace UriSudokuSolver
         /// <param name="size">The size of the board.</param>
         public GameBoard(int size)
         {
-            _board = new byte[size, size];
+            board = new byte[size, size];
         }
 
         public GameBoard(int rows, int cols)
         {
-            _board = new byte[rows, cols];
+            board = new byte[rows, cols];
         }
 
         /*copy constractor*/
         public GameBoard(byte[,] board)
         {
-            _board = new byte[board.GetLength(0), board.GetLength(1)];
+            this.board = new byte[board.GetLength(0), board.GetLength(1)];
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    _board[i, j] = board[i, j];
+                    this.board[i, j] = board[i, j];
                 }
             }
         }
@@ -44,31 +44,31 @@ namespace UriSudokuSolver
         {
             get
             {
-                return _board[row, col];
+                return board[row, col];
             }
             set
             {
-                _board[row, col] = value;
+                board[row, col] = value;
             }
         }
         /*Get board rows number of rows*/
         public int GetRows()
         {
-            return _board.GetLength(0);
+            return board.GetLength(0);
         }
         /*Get board number of cols*/
         public int GetCols()
         {
-            return _board.GetLength(1);
+            return board.GetLength(1);
         }
         /*Return instance of the board matrix */
         public byte[,] GetBoard()
         {
-            return _board;
+            return board;
         }
         public void SetBoard(byte[,] board)
         {
-            _board = board;
+            this.board = board;
         }
         public abstract void FillBoard(string boardString);
 
