@@ -13,12 +13,12 @@ namespace UriSudokuSolver
     static class SudokuSolverUtility
     {
         /*Gets the board masks for a given board.*/
-        public static void InitializeBoardMasks(byte[,] board, out int[] masks)
+        public static void InitializeBoardMasks(byte[,] board, out int[] masks, int boardSize)
         {
-            masks = new int[board.GetLength(0)];
+            masks = new int[boardSize];
 
             //Initialize masks
-            for (int valueIndex = 0; valueIndex < board.GetLength(0); valueIndex++)
+            for (int valueIndex = 0; valueIndex < boardSize; valueIndex++)
             {
                 // Shift 1 to the left by value bits representing the mask of the value in the board by index (example 00000100 is the mask for the value 3).
                 masks[valueIndex] = 1 << valueIndex;
@@ -26,18 +26,18 @@ namespace UriSudokuSolver
         }
 
         /*Set the valid values for each row column and box.*/
-        public static void SetValidValues(byte[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox)
+        public static void SetValidValues(byte[,] board, int[] masks, out int[] validValuesRow, out int[] validValuesColumn, out int[] validValuesBox, int boardSize)
         {
             // create arrays
-            int sqrSize = (int)Math.Sqrt(board.GetLength(0));
-            validValuesRow = new int[board.GetLength(0)];
-            validValuesColumn = new int[board.GetLength(0)];
-            validValuesBox = new int[board.GetLength(0)];
+            int sqrSize = (int)Math.Sqrt(boardSize);
+            validValuesRow = new int[boardSize];
+            validValuesColumn = new int[boardSize];
+            validValuesBox = new int[boardSize];
 
             // Initialize the valid values for each row, column and box
-            for (int row = 0; row < board.GetLength(0); row++)
+            for (int row = 0; row < boardSize; row++)
             {
-                for (int col = 0; col < board.GetLength(1); col++)
+                for (int col = 0; col < boardSize; col++)
                 {
                     if (board[row, col] != 0)
                     {
@@ -49,24 +49,24 @@ namespace UriSudokuSolver
         }
 
         /*Finds the best empty cell.*/
-        public static void FindBestEmptyCell(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, out int emptyCellRow, out int emptyCellCol)
+        public static void FindBestEmptyCell(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int boardSize, out int emptyCellRow, out int emptyCellCol)
         {
             emptyCellRow = -1;
             emptyCellCol = -1;
-            int minValidValues = board.GetLength(0) + 1;
+            int minValidValues = boardSize + 1;
             int validValues, bitCount;
             // Find the cell with the minimum number of valid values
-            for (int row = 0; row < board.GetLength(0); row++)
+            for (int row = 0; row < boardSize; row++)
             {
                 // check if the row is full
-                if (!CheckIfGroupFilled(validValuesRow[row], board.GetLength(0)))
+                if (!CheckIfGroupFilled(validValuesRow[row], boardSize))
                 {
-                    for (int col = 0; col < board.GetLength(1); col++)
+                    for (int col = 0; col < boardSize; col++)
                     {
                         if (board[row, col] == 0)
                         {
 
-                            validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col);
+                            validValues = GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
                             bitCount = CountBits(validValues);
                             // If the empty cell doesn't have any valid values, then send this cell back 
                             if (bitCount == 0)
@@ -96,7 +96,7 @@ namespace UriSudokuSolver
         /*Function checks if a  group is full*/
         private static bool CheckIfGroupFilled(int group, int size)
         {
-            int full = (int)Math.Pow(2, size) - 1;
+            int full = (size * size) - 1;
             // Check if the group is full
             if (group == full)
                 return true;
@@ -106,14 +106,14 @@ namespace UriSudokuSolver
 
 
         /*Get valid values for a given cell.*/
-        public static int GetValidValuesForCell(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col)
+        public static int GetValidValuesForCell(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int boardSize)
         {
             // OR bit operator on the unvalid values (bit in the index - 1 of the value is 1) of the row, column and box representing the valid values of the cell
-            int nonValidValuesRowColSqr = validValuesRow[row] | validValuesColumn[col] | validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize];
+            int nonValidValuesRowColSqr = validValuesRow[row] | validValuesColumn[col] | validValuesBox[GetBoxIndex(row, col, sqrSize)];
             // NOT bit operator on the sum of the unvalid values to get the valid values
             int validValues = ~nonValidValuesRowColSqr;
             // AND bit operator on the valid values and the sum of the valid values to get the number of valid values
-            validValues = validValues & ((1 << board.GetLength(0)) - 1);
+            validValues = validValues & ((1 << boardSize) - 1);
             return validValues;
         }
 
@@ -123,7 +123,7 @@ namespace UriSudokuSolver
             // Set the valid value for the row col and box by using the OR operator to add the mask of the value to the valid values.
             validValuesRow[row] |= masks[value - 1];
             validValuesColumn[col] |= masks[value - 1];
-            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] |= masks[value - 1];
+            validValuesBox[GetBoxIndex(row, col, sqrSize)] |= masks[value - 1];
         }
 
 
@@ -146,7 +146,7 @@ namespace UriSudokuSolver
             // Check with the AND bit operator on the mask of the value, if the value is valid in the row, column and box (if the 1 bit is on in the value index then it's not safe).
             return (validValuesRow[row] & masks[value]) == 0 &&
                     (validValuesColumn[col] & masks[value]) == 0 &&
-                    (validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] & masks[value]) == 0;
+                    (validValuesBox[GetBoxIndex(row, col, sqrSize)] & masks[value]) == 0;
         }
 
 
@@ -174,25 +174,31 @@ namespace UriSudokuSolver
             // Set the valid value for the row col and box by using the XOR operator to add the mask of the value to the valid values.
             validValuesRow[row] &= ~masks[value - 1];
             validValuesColumn[col] &= ~masks[value - 1];
-            validValuesBox[(row / sqrSize) * sqrSize + col / sqrSize] &= ~masks[value - 1];
+            validValuesBox[GetBoxIndex(row, col, sqrSize)] &= ~masks[value - 1];
         }
 
 
 
         /*Cleans the stack form saved values and return them to the board*/
-        public static void CleanStack(byte[,] board, Stack<int> validStack, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int cellNum)
+        public static void CleanStack(byte[,] board, Stack<int> validStack, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int cellNum, int boardSize)
         {
             int index, row, col;
             for (int i = 0; i < cellNum; i++)
             {
                 index = validStack.Pop();
-                row = index / board.GetLength(0);
-                col = index % board.GetLength(0);
+                row = index / boardSize;
+                col = index % boardSize;
                 //deletes from valide values arrays
-                SudokuSolverUtility.AddValueToValidValues(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col);
+                AddValueToValidValues(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col);
                 board[row, col] = 0;
             }
 
+        }
+
+        /*Get box index*/
+        public static int GetBoxIndex(int row, int col, int sqrSize)
+        {
+            return (row / sqrSize) * sqrSize + col / sqrSize;
         }
 
 
