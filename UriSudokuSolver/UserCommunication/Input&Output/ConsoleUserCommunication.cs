@@ -52,7 +52,6 @@ namespace UriSudokuSolver.UserCommunication
         public ConsoleUserCommunication(GameType gameType)
         {
             _gameType = gameType;
-            _sudokuWriter = WriterFactory.GetWriter(gameType);
             _gameRules = GameRules.GetRules(gameType);
             _board = null;
             _sudokuReader = null;
@@ -238,11 +237,13 @@ namespace UriSudokuSolver.UserCommunication
             {
                 filePath = GetFilePath();
                 _sudokuReader = ReaderFactory.GetReader(readerType, _gameType, filePath);
+                _sudokuWriter = WriterFactory.GetWriter(readerType,filePath);
 
             }
             else if (readerType == RedearType.CONSOLE)
             {
                 _sudokuReader = ReaderFactory.GetReader(readerType, _gameType);
+                _sudokuWriter = WriterFactory.GetWriter(readerType);
                 Console.WriteLine(INSTRUCTIONS_MESSAGE);
                 //Example of a board
                 Console.WriteLine("This board:");
