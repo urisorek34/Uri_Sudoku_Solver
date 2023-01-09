@@ -27,6 +27,9 @@ namespace UriSudokuSolver
         private string _result;
         // Stack for saving changes done to the board in the human tactics
         private Stack<int> _valuesSaver;
+        // Board size
+        private int _boardSize;
+
 
 
         /*Constractor for the solver. Initialize all the solver properties.*/
@@ -34,11 +37,11 @@ namespace UriSudokuSolver
         {
             _board = board.GetBoard();
             _sqrSize = (int)Math.Sqrt(board.GetRows());
-
+            _boardSize = board.GetRows();
             // Initialize board masks
-            SudokuSolverUtility.InitializeBoardMasks(_board, out _masks);
+            SudokuSolverUtility.InitializeBoardMasks(_board, out _masks, _boardSize);
             // Initialize the valid values for each row, column and box
-            SudokuSolverUtility.SetValidValues(_board, _masks, out _validValuesRow, out _validValuesColumn, out _validValuesBox);
+            SudokuSolverUtility.SetValidValues(_board, _masks, out _validValuesRow, out _validValuesColumn, out _validValuesBox, _boardSize);
             _result = "";
             _valuesSaver = new Stack<int>();
 
@@ -73,11 +76,11 @@ namespace UriSudokuSolver
             int isSolved, totalChanged = 0;
             do
             {
-                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, _board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize);
+                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, _board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, _boardSize);
                 // If is solved is -1 there is no solution to the board 
                 if (isSolved == -1)
                 {
-                    SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged);
+                    SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
                     return false;
                 }
                 totalChanged += isSolved;
@@ -86,7 +89,7 @@ namespace UriSudokuSolver
 
             int emptyCellRow, emptyCellCol;
             // Find the cell with the minimum number of valid values
-            SudokuSolverUtility.FindBestEmptyCell(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, out emptyCellRow, out emptyCellCol);
+            SudokuSolverUtility.FindBestEmptyCell(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, _boardSize, out emptyCellRow, out emptyCellCol);
 
             if (emptyCellRow == -1)
             {
@@ -94,7 +97,7 @@ namespace UriSudokuSolver
             }
 
             // Try to solve the sudoku by assigning a value to the empty cell
-            for (int valueIndex = 1; valueIndex <= _board.GetLength(0); valueIndex++)
+            for (int valueIndex = 1; valueIndex <= _boardSize; valueIndex++)
             {
                 // Check if is safe to try to assign the value to the empty cell
                 if (SudokuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex - 1, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize))
@@ -116,7 +119,7 @@ namespace UriSudokuSolver
                 }
 
             }
-            SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged);
+            SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
             return false;
         }
 
