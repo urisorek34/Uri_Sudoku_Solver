@@ -92,3 +92,4 @@ namespace UriSudokuSolverTests.SolvingAlgorithm
             Assert.AreEqual(expectedBoardString, board.ToString());
         }
     }
+}
