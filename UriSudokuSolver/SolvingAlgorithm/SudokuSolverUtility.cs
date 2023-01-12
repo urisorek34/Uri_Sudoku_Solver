@@ -45,19 +45,19 @@ namespace UriSudokuSolver
         /*Gets the peers for a given cell.*/
         private static List<int> GetPeersForCell(byte[,] board, int row, int col, int boardSize, int blockSize)
         {
-            List<int> peers = new List<int>();
+            HashSet<int> peers = new HashSet<int>();
             //Get peers in the same row
             GetPeersForRow(row, col, boardSize, peers);
             //Get peers in the same column
             GetPeersForColumn(row, col, boardSize, peers);
             //Get peers in the same block
             GetPeersForBlock(row, col, boardSize, blockSize, peers);
-            return peers;
+            return peers.ToList();
         }
 
 
         /*Get peers for row.*/
-        private static void GetPeersForRow(int row, int col, int boardSize, List<int> peers)
+        private static void GetPeersForRow(int row, int col, int boardSize, HashSet<int> peers)
         {
             for (int peerCol = 0; peerCol < boardSize; peerCol++)
             {
@@ -69,7 +69,7 @@ namespace UriSudokuSolver
         }
 
         /*Get peers for column.*/
-        private static void GetPeersForColumn(int row, int col, int boardSize, List<int> peers)
+        private static void GetPeersForColumn(int row, int col, int boardSize, HashSet<int> peers)
         {
             for (int peerRow = 0; peerRow < boardSize; peerRow++)
             {
@@ -81,22 +81,23 @@ namespace UriSudokuSolver
         }
 
         /*Get peers for block.*/
-        private static void GetPeersForBlock(int row, int col, int boardSize, int blockSize, List<int> peers)
+        private static void GetPeersForBlock(int row, int col, int boardSize, int blockSize, HashSet<int> peers)
         {
-            // calculate the given block row and column
-            int blockRow = row / blockSize;
-            int blockCol = col / blockSize;
-            // go over all cells in the board and add them to the peers
-            for (int blockRowIndex = blockRow * blockSize; blockRowIndex < (blockRow + 1) * blockSize; blockRowIndex++)
+            int boxNum = GetBoxIndex(row, col,  blockSize);
+            int cellInBox = row % blockSize * blockSize + col % blockSize;
+            int rowInsideBox, colInsideBox;
+            for (int i = 0; i < boardSize; i++)
             {
-                for (int blockColIndex = blockCol * blockSize; blockColIndex < (blockCol + 1) * blockSize; blockColIndex++)
+                //if the box is not the current box
+                if (i != cellInBox)
                 {
-                    if (blockRowIndex != row && blockColIndex != col)
-                    {
-                        peers.Add(blockRowIndex * boardSize + blockColIndex);
-                    }
+                    //get the row and column of the cell inside the box
+                    rowInsideBox = blockSize * (boxNum / blockSize) + i / blockSize;
+                    colInsideBox = (boxNum % blockSize) * blockSize + i % blockSize;
+                    peers.Add(rowInsideBox * boardSize + colInsideBox);
                 }
             }
+
         }
 
         /*Set Start peers queue.*/
