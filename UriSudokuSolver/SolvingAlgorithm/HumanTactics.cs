@@ -78,12 +78,23 @@ namespace UriSudokuSolver.SolvingAlgorithm
          the function returns 0 if not found hidden, the possible value for a cell if found, and -1 if the board is unsolveable.                                                       */
         private static int HiddenSingles(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int validValues, int boardSize)
         {
-
+            int possibleInOtherCellsBox = 0, possibleInOtherCellsRow = 0, possibleInOtherCellsCol = 0;
+            // Get the cell index in the box.
+            int cellInBox = row % sqrSize * sqrSize + col % sqrSize;
+            // check the box number
+            int boxNumber = SudokuSolverUtility.GetBoxIndex(row, col, sqrSize);
+           
             int possibleForCellBox, possibleForCellRow, possibleForCellCol;
+           
             // Get possible vlues for box, row and column
-            int possibleInOtherCellsBox = GetPossibleValuesForOtherCellsInBox(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
-            int possibleInOtherCellsRow = GetPossibleValuesForOtherCellsInRow(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
-            int possibleInOtherCellsCol = GetPossibleValuesForOtherCellsInCol(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
+            for (int indexInGroup = 0; indexInGroup < boardSize; indexInGroup++)
+            {
+                possibleInOtherCellsBox = GetPossibleValuesForOtherCellsInBox(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, cellInBox, boxNumber, boardSize, indexInGroup, possibleInOtherCellsBox);
+                possibleInOtherCellsRow = GetPossibleValuesForOtherCellsInRow(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize, indexInGroup, possibleInOtherCellsRow);
+                possibleInOtherCellsCol = GetPossibleValuesForOtherCellsInCol(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize, indexInGroup, possibleInOtherCellsCol);
+            }
+
+
             // get the possible values for the cell by using the NOT and OR bit operators to remove the possible values for all the cells in the row, col and box
             possibleForCellBox = ~(~validValues | possibleInOtherCellsBox);
             possibleForCellRow = ~(~validValues | possibleInOtherCellsRow);
@@ -117,29 +128,20 @@ namespace UriSudokuSolver.SolvingAlgorithm
 
         /*Get possible values in other cells in the box */
 
-        private static int GetPossibleValuesForOtherCellsInBox(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int boardSize)
+        private static int GetPossibleValuesForOtherCellsInBox(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int cellInBox, int boxNumber, int boardSize, int sameBoxCell, int possibleInOtherCells)
         {
-            int possibleInOtherCells = 0;
             int rowInsideBox, colInsideBox;
-            // Get the cell index in the box.
-            int cellInBox = row % sqrSize * sqrSize + col % sqrSize;
-            // check the box number
-            int boxNumber = SudokuSolverUtility.GetBoxIndex(row, col, sqrSize);
-            //Go over all the boxes in the board
-            for (int sameBoxCell = 0; sameBoxCell < boardSize; sameBoxCell++)
+            //if the box is not the current box
+            if (sameBoxCell != cellInBox)
             {
-                //if the box is not the current box
-                if (sameBoxCell != cellInBox)
+                //get the row and column of the cell inside the box
+                rowInsideBox = sqrSize * (boxNumber / sqrSize) + sameBoxCell / sqrSize;
+                colInsideBox = (boxNumber % sqrSize) * sqrSize + sameBoxCell % sqrSize;
+                //if the cell is empty
+                if (board[rowInsideBox, colInsideBox] == 0)
                 {
-                    //get the row and column of the cell inside the box
-                    rowInsideBox = sqrSize * (boxNumber / sqrSize) + sameBoxCell / sqrSize;
-                    colInsideBox = (boxNumber % sqrSize) * sqrSize + sameBoxCell % sqrSize;
-                    //if the cell is empty
-                    if (board[rowInsideBox, colInsideBox] == 0)
-                    {
-                        // add the valid values of the cell to the possible values for all the cells in the box
-                        possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, rowInsideBox, colInsideBox, boardSize);
-                    }
+                    // add the valid values of the cell to the possible values for all the cells in the box
+                    possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, rowInsideBox, colInsideBox, boardSize);
                 }
             }
             return possibleInOtherCells;
@@ -148,38 +150,31 @@ namespace UriSudokuSolver.SolvingAlgorithm
         }
 
         /*Get possible values in other cells in column*/
-        private static int GetPossibleValuesForOtherCellsInCol(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int boardSize)
+        private static int GetPossibleValuesForOtherCellsInCol(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int boardSize, int sameColCell, int possibleInOtherCells)
         {
-            int possibleInOtherCells = 0;
-            for (int sameColCell = 0; sameColCell < boardSize; sameColCell++)
+            if (sameColCell != row)
             {
-                if (sameColCell != row)
+                // if the cell is empty
+                if (board[sameColCell, col] == 0)
                 {
-                    // if the cell is empty
-                    if (board[sameColCell, col] == 0)
-                    {
-                        // add the valid values of the cell to the possible values for all the cells in the column
-                        possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, sameColCell, col, boardSize);
-                    }
+                    // add the valid values of the cell to the possible values for all the cells in the column
+                    possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, sameColCell, col, boardSize);
                 }
             }
             return possibleInOtherCells;
         }
 
         /*Get possible values in other cells in row*/
-        private static int GetPossibleValuesForOtherCellsInRow(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int boardSize)
+        private static int GetPossibleValuesForOtherCellsInRow(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int row, int col, int boardSize, int sameRowCell, int possibleInOtherCells)
         {
-            int possibleInOtherCells = 0;
-            for (int sameRowCell = 0; sameRowCell < boardSize; sameRowCell++)
+
+            if (sameRowCell != col)
             {
-                if (sameRowCell != col)
+                // if the cell is empty
+                if (board[row, sameRowCell] == 0)
                 {
-                    // if the cell is empty
-                    if (board[row, sameRowCell] == 0)
-                    {
-                        // add the valid values of the cell to the possible values for all the cells in the row
-                        possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, sameRowCell, boardSize);
-                    }
+                    // add the valid values of the cell to the possible values for all the cells in the row
+                    possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, sameRowCell, boardSize);
                 }
             }
             return possibleInOtherCells;
