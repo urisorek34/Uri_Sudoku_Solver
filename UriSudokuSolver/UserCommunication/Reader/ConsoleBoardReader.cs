@@ -34,7 +34,7 @@ namespace UriSudokuSolver
             GameBoard board = GetRightBoard((int)Math.Sqrt(line.Length));
             board.FillBoard(line);
             // board chek if the board is legal.
-            board.ValidateBoard();
+            board.CheckIfFollowGameRules();
             return board;
         }
 

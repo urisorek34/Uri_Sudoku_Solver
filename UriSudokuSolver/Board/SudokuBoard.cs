@@ -12,11 +12,7 @@ namespace UriSudokuSolver
     {
         private const int MIN_VALUE = 1;
 
-        /// <summary>
-        /// Constractor for sudoku board.
-        /// </summary>
-        /// <param name="size"> the size of the board.</param>
-        /// <param name="minValue"> the min value for the sudoko board</param>
+        /*Empty constractor for the sudoku board*/
         public SudokuBoard(int size) : base(size)
         {
 
@@ -33,6 +29,7 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
+                // convert the char to byte
                 _board[row, col] = (byte)(c - '0');
                 col++;
                 if (col == GetCols())
@@ -44,7 +41,7 @@ namespace UriSudokuSolver
         }
 
         /*Check that the board is folowing the rules of sudoku.*/
-        public override void ValidateBoard()
+        public override void CheckIfFollowGameRules()
         {
             for (int i = 0; i < GetRows(); i++)
             {

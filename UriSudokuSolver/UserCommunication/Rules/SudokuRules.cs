@@ -18,7 +18,6 @@ namespace UriSudokuSolver.UserCommunication.Rules
         public SudokuRules() 
         {
             _rules = SUDOKU_RULES;
-
         }
 
     }

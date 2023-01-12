@@ -26,7 +26,7 @@ namespace UriSudokuSolver.Tests
             string boardString = "000000000000000010000000002030000000090090000000000000003303000000000000000000000";
             SudokuBoard sudokuBoard = new SudokuBoard(boardString.Length);
             sudokuBoard.FillBoard(boardString);
-            Assert.ThrowsException<BoardNotFollowGameRulesException>(() => sudokuBoard.ValidateBoard());
+            Assert.ThrowsException<BoardNotFollowGameRulesException>(() => sudokuBoard.CheckIfFollowGameRules());
         }
         
     }

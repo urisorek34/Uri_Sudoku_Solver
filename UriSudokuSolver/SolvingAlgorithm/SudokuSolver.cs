@@ -33,7 +33,7 @@ namespace UriSudokuSolver
         // Dictionary that contains cell index as key and list of peer index (the cells that it affects --> in the same row, column or box)
         private static Dictionary<int, List<int>> _peersForCell = new Dictionary<int, List<int>>();
         // queue for the peers of a changed cell
-        private Queue<int> _peersQueue;
+        private List<int> _peersQueue;
 
 
 
@@ -43,9 +43,9 @@ namespace UriSudokuSolver
             _board = board.GetBoard();
             _sqrSize = (int)Math.Sqrt(board.GetRows());
             _boardSize = board.GetRows();
-            _peersForCell = SudokuSolverUtility.SetPeers(_board, _boardSize, _sqrSize);
+            _peersForCell = SudokuSolverUtility.SetPeers(_board,_boardSize, _sqrSize);
             // Initialize board masks
-            SudokuSolverUtility.InitializeBoardMasks(_board, out _masks, _boardSize);
+            SudokuSolverUtility.InitializeBoardMasks(out _masks, _boardSize);
             // Initialize the valid values for each row, column and box
             SudokuSolverUtility.SetValidValues(_board, _masks, out _validValuesRow, out _validValuesColumn, out _validValuesBox, _boardSize);
             _result = "";
@@ -86,7 +86,7 @@ namespace UriSudokuSolver
             {
                 return false;
             }
-            
+
             int emptyCellRow, emptyCellCol;
             // Find the cell with the minimum number of valid values
             SudokuSolverUtility.FindBestEmptyCell(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, _boardSize, out emptyCellRow, out emptyCellCol);
@@ -95,13 +95,12 @@ namespace UriSudokuSolver
 
                 return true;
             }
-            
+
             // if not solved after human tactics, try to solve using backtracking brute force
             if (TryBruteForce(emptyCellRow, emptyCellCol))
             {
                 return true;
             }
-
             SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
             return false;
         }
@@ -137,7 +136,8 @@ namespace UriSudokuSolver
         {
             _board[row, col] = (byte)value;
             SudokuSolverUtility.UpdateValidValues(_masks, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, row, col, value);
-            _peersQueue.Enqueue(row * _boardSize + col);
+            _peersQueue.Add(row * _boardSize + col);
+            
         }
 
         /*Remove signed values from the board*/
@@ -145,7 +145,7 @@ namespace UriSudokuSolver
         {
             SudokuSolverUtility.AddValueToValidValues(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, row, col);
             _board[row, col] = 0;
-            
+
         }
 
         /*Try to solve in human tactics untill there is no more cells that can be solved in human tactics.*/
@@ -154,13 +154,16 @@ namespace UriSudokuSolver
             int isSolved, totalChanged = 0;
             while (_peersQueue.Count != 0)
             {
-                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, _peersForCell, _peersQueue, _board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, _boardSize, _peersQueue.Dequeue());
+                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, _peersForCell, _peersQueue, _board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, _boardSize, _peersQueue[0]);
+                _peersQueue.RemoveAt(0);
                 // If is solved is -1 there is no solution to the board 
                 if (isSolved == -1)
                 {
                     SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
                     return -1;
-                }
+                }                
+                // remove Duplicates peers  
+                _peersQueue = _peersQueue.ToHashSet().ToList();
                 totalChanged += isSolved;
             }
             return totalChanged;

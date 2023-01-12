@@ -12,15 +12,13 @@ namespace UriSudokuSolver
 
         protected byte[,] _board;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
-        /// </summary>
-        /// <param name="size">The size of the board.</param>
+        /*Basic constractor for an abstract game board*/
         public GameBoard(int size)
         {
             _board = new byte[size, size];
         }
-
+        
+        /*Constractor for a game with different rows and cols*/
         public GameBoard(int rows, int cols)
         {
             _board = new byte[rows, cols];
@@ -66,13 +64,15 @@ namespace UriSudokuSolver
         {
             return _board;
         }
+        
+        /*Set the board to a given matrix*/
         public void SetBoard(byte[,] board)
         {
             _board = board;
         }
         public abstract void FillBoard(string boardString);
 
-        public abstract void ValidateBoard();
+        public abstract void CheckIfFollowGameRules();
         public abstract bool IsFull();
     }
 }

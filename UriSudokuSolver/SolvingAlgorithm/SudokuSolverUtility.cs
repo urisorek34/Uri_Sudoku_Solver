@@ -14,7 +14,7 @@ namespace UriSudokuSolver
     static class SudokuSolverUtility
     {
         /*Gets the board masks for a given board.*/
-        public static void InitializeBoardMasks(byte[,] board, out int[] masks, int boardSize)
+        public static void InitializeBoardMasks(out int[] masks, int boardSize)
         {
             masks = new int[boardSize];
 
@@ -39,6 +39,8 @@ namespace UriSudokuSolver
                     peers.Add(row * boardSize + col, GetPeersForCell(board, row, col, boardSize, blockSize));
                 }
             }
+
+
             return peers;
         }
 
@@ -47,21 +49,21 @@ namespace UriSudokuSolver
         {
             HashSet<int> peers = new HashSet<int>();
             //Get peers in the same row
-            GetPeersForRow(row, col, boardSize, peers);
+            GetPeersForRow(board, row, col, boardSize, peers);
             //Get peers in the same column
-            GetPeersForColumn(row, col, boardSize, peers);
+            GetPeersForColumn(board, row, col, boardSize, peers);
             //Get peers in the same block
-            GetPeersForBlock(row, col, boardSize, blockSize, peers);
+            GetPeersForBlock(board, row, col, boardSize, blockSize, peers);
             return peers.ToList();
         }
 
 
         /*Get peers for row.*/
-        private static void GetPeersForRow(int row, int col, int boardSize, HashSet<int> peers)
+        private static void GetPeersForRow(byte[,] board, int row, int col, int boardSize, HashSet<int> peers)
         {
             for (int peerCol = 0; peerCol < boardSize; peerCol++)
             {
-                if (peerCol != row)
+                if (peerCol != col && board[row, peerCol] == 0)
                 {
                     peers.Add(row * boardSize + peerCol);
                 }
@@ -69,21 +71,22 @@ namespace UriSudokuSolver
         }
 
         /*Get peers for column.*/
-        private static void GetPeersForColumn(int row, int col, int boardSize, HashSet<int> peers)
+        private static void GetPeersForColumn(byte[,] board, int row, int col, int boardSize, HashSet<int> peers)
         {
             for (int peerRow = 0; peerRow < boardSize; peerRow++)
             {
-                if (peerRow != col)
+                if (peerRow != row && board[peerRow, col] == 0)
                 {
                     peers.Add(peerRow * boardSize + col);
                 }
             }
         }
 
+
         /*Get peers for block.*/
-        private static void GetPeersForBlock(int row, int col, int boardSize, int blockSize, HashSet<int> peers)
+        private static void GetPeersForBlock(byte[,] board, int row, int col, int boardSize, int blockSize, HashSet<int> peers)
         {
-            int boxNum = GetBoxIndex(row, col,  blockSize);
+            int boxNum = GetBoxIndex(row, col, blockSize);
             int cellInBox = row % blockSize * blockSize + col % blockSize;
             int rowInsideBox, colInsideBox;
             for (int i = 0; i < boardSize; i++)
@@ -91,19 +94,23 @@ namespace UriSudokuSolver
                 //if the box is not the current box
                 if (i != cellInBox)
                 {
+
                     //get the row and column of the cell inside the box
                     rowInsideBox = blockSize * (boxNum / blockSize) + i / blockSize;
                     colInsideBox = (boxNum % blockSize) * blockSize + i % blockSize;
-                    peers.Add(rowInsideBox * boardSize + colInsideBox);
+                    if (board[rowInsideBox, colInsideBox] == 0)
+                    {
+                        peers.Add(rowInsideBox * boardSize + colInsideBox);
+                    }
                 }
             }
 
         }
 
         /*Set Start peers queue.*/
-        public static Queue<int> SetStartPeersQueue(byte[,] board, int boardSize)
+        public static List<int> SetStartPeersQueue(byte[,] board, int boardSize)
         {
-            Queue<int> peersQueue = new Queue<int>();
+            List<int> peersQueue = new List<int>();
             //Add all peers to the queue
             for (int row = 0; row < boardSize; row++)
             {
@@ -111,7 +118,7 @@ namespace UriSudokuSolver
                 {
                     if (board[row, col] != 0)
                     {
-                        peersQueue.Enqueue(row * board.GetLength(0) + col);
+                        peersQueue.Add(row * boardSize + col);
                     }
                 }
             }
@@ -148,7 +155,6 @@ namespace UriSudokuSolver
             emptyCellRow = -1;
             emptyCellCol = -1;
             int minValidValues = boardSize + 1;
-            int validValues, bitCount;
             // Find the cell with the minimum number of valid values
             for (int row = 0; row < boardSize; row++)
             {
@@ -157,36 +163,49 @@ namespace UriSudokuSolver
                 {
                     for (int col = 0; col < boardSize; col++)
                     {
-                        if (board[row, col] == 0)
+                        // check if the next cell is the min eempty cell
+                        if (ReplaceIfMin(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, boardSize, row,col, ref minValidValues, ref emptyCellRow, ref emptyCellCol))
                         {
-                            validValues = GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
-                            bitCount = CountBits(validValues);
-                            // If the empty cell doesn't have any valid values, then send this cell back 
-                            if (bitCount == 0)
-                            {
-                                // No valid values for the cell
-                                emptyCellRow = row;
-                                emptyCellCol = col;
-                                return;
-                            }
-
-                            // find min valid values
-                            else if (bitCount <= minValidValues)
-                            {
-                                minValidValues = bitCount;
-                                emptyCellRow = row;
-                                emptyCellCol = col;
-                            }
-
+                            return;
                         }
                     }
+                    
                 }
 
             }
         }
 
+        /*Check if a cell has less posible values then the currnt min cell and if it has, replace the min cell with it*/
+        private static bool ReplaceIfMin(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int boardSize, int row,int col, ref int minValidValues, ref int emptyCellRow, ref int emptyCellCol)
+        {
+            int validValues, bitCount;
+            // if cell is empty
+            if (board[row, col] == 0)
+            {
+                validValues = GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
+                bitCount = CountBits(validValues);
+                // If the empty cell doesn't have any valid values, then send this cell back 
+                if (bitCount == 0)
+                {
+                    // No valid values for the cell
+                    emptyCellRow = row;
+                    emptyCellCol = col;
+                    return true;
+                }
 
-        /*Function checks if a  group is full*/
+                // find min valid values
+                else if (bitCount <= minValidValues)
+                {
+                    minValidValues = bitCount;
+                    emptyCellRow = row;
+                    emptyCellCol = col;
+                }
+
+            }
+            return false;
+        }
+
+        /*Function checks if a group is full*/
         private static bool CheckIfGroupFilled(int group, int size)
         {
             //Exception because in the case of size = 1 --> size*size = 1 and then it will return true 

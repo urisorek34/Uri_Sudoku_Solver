@@ -77,5 +77,21 @@ namespace UriSudokuSolverTests.SolvingAlgorithm
             Assert.AreEqual(expectedBoardString, board.ToString());
         }
 
+        /*hard board 5.*/
+        [TestMethod]
+        public void HardBoard5Test()
+        {
+            // Arrange
+            string boardString = "0000:=000000000?70050;01:00@90<8900800700004600=60:=080000070002=00030890>?500012;01@:000008007>00001000@0000900000<>?0740000000006@900000>0100002;0600=800<00500070002000000000<0900>?5;4020=0@0020=0@0<0907000>?500400=6000<803<0000002001@:0000=68000?0004020";
+            string expectedBoardString = ";412:=6@3<8957>?7>?52;41:=6@93<893<8?57>12;46@:=6@:=<893>?57;412=6@:3<897>?52;412;41@:=693<8?57>57>?12;4@:=6893<893<>?57412;=6@::=6@93<857>?12;412;46@:=893<>?57?57>412;6@:=<893<8937>?5;412:=6@412;=6@:<8937>?5>?57;412=6@:3<893<8957>?2;41@:=6@:=6893<?57>412;";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Pipes;
-using UriSudokuSolver.Board;
+﻿using UriSudokuSolver.Board;
 using UriSudokuSolver.CustomExceptions;
 using UriSudokuSolver.Result;
 using UriSudokuSolver.SolvingAlgorithem;
@@ -62,7 +58,14 @@ namespace UriSudokuSolver.UserCommunication
         {
             // handling Control c pressed
             Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs cancel) => { Console.WriteLine("Assuming the user wants to exit...\n" + GOODBYE_MESSAGE); };
+            StartingMessage();
 
+            ReaderType readerType = ReaderType.CONSOLE;
+            GetInputFromUser(readerType);
+        }
+        /*Print the starting message*/
+        private void StartingMessage()
+        {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(SUDOKU_MESSAGE);
             Console.ResetColor();
@@ -70,12 +73,17 @@ namespace UriSudokuSolver.UserCommunication
             Console.WriteLine(WELCOME_MESSAGE);
             Console.ResetColor();
             Console.WriteLine("\n\nHere is the menu:");
-
-            RedearType readerType = RedearType.CONSOLE;
-            UserCommand userCommand;
             PrintMenu();
+
+        }
+
+
+        /*User communication main loop*/
+        private void GetInputFromUser(ReaderType readerType)
+        {
+            UserCommand userCommand;
             // the main communication loop
-            while (readerType != RedearType.EXIT)
+            while (readerType != ReaderType.EXIT)
             {
                 userCommand = GetMenuOption();
                 Console.ResetColor();
@@ -103,7 +111,7 @@ namespace UriSudokuSolver.UserCommunication
         }
 
         /*Gets the reader type from the user.*/
-        private RedearType GetTheReaderTypeFromUser()
+        private ReaderType GetTheReaderTypeFromUser()
         {
             string readerType;
 
@@ -119,11 +127,11 @@ namespace UriSudokuSolver.UserCommunication
             switch (readerType.ToLower())
             {
                 case "c":
-                    return RedearType.CONSOLE;
+                    return ReaderType.CONSOLE;
                 case "f":
-                    return RedearType.FILE;
+                    return ReaderType.FILE;
                 default:
-                    return RedearType.EXIT;
+                    return ReaderType.EXIT;
             }
 
 
@@ -178,7 +186,7 @@ namespace UriSudokuSolver.UserCommunication
             _gameResult = ResultFactory.GetResult(_gameType, solver, board);
             // Print the result
             string result = _gameResult.GetResult();
-            
+            // Paint the board green if solved, red if not solved
             if (board.IsFull())
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -228,42 +236,10 @@ namespace UriSudokuSolver.UserCommunication
         }
 
         /*Function reads and solves the board*/
-        private void ReadAndSolve(RedearType readerType)
+        private void ReadAndSolve(ReaderType readerType)
         {
-            string filePath;
-            _board = null;
-            // address the reader as the right one.
-            if (readerType == RedearType.FILE)
-            {
-                filePath = GetFilePath();
-                _sudokuReader = ReaderFactory.GetReader(readerType, _gameType, filePath);
-                _sudokuWriter = WriterFactory.GetWriter(readerType,filePath);
 
-            }
-            else if (readerType == RedearType.CONSOLE)
-            {
-                _sudokuReader = ReaderFactory.GetReader(readerType, _gameType);
-                _sudokuWriter = WriterFactory.GetWriter(readerType);
-                Console.WriteLine(INSTRUCTIONS_MESSAGE);
-                //Example of a board
-                Console.WriteLine("This board:");
-                Console.WriteLine(BOARD_EXAMPLE);
-                Console.WriteLine("\nBecome this board:\n");
-                _board = new SudokuBoard((int)Math.Sqrt(BOARD_EXAMPLE.Length));
-                _board.FillBoard(BOARD_EXAMPLE);
-                _sudokuWriter.WriteBoard(_board);
-                _board = null;
-                Console.ResetColor();
-
-                Console.WriteLine("\nEnter the board:\n ");
-            }
-            else
-            {
-                // if the user exits
-                Console.WriteLine(GOODBYE_MESSAGE);
-                return;
-            }
-            ReadSudokuWithExceptionHandling();
+            ReadTheSudokuBoard(readerType);
             // if the given board wasn't valid
             if (_board == null)
             {
@@ -275,6 +251,50 @@ namespace UriSudokuSolver.UserCommunication
             }
         }
 
+        /*Print an example of a board to the user.*/
+        private void PrintBoardExample()
+        {
+            Console.WriteLine("This board:");
+            Console.WriteLine(BOARD_EXAMPLE);
+            Console.WriteLine("\nBecome this board:\n");
+            _board = new SudokuBoard((int)Math.Sqrt(BOARD_EXAMPLE.Length));
+            _board.FillBoard(BOARD_EXAMPLE);
+            _sudokuWriter.WriteBoard(_board);
+            _board = null;
+            Console.ResetColor();
+        }
+
+
+        private void ReadTheSudokuBoard(ReaderType readerType)
+        {
+            string filePath;
+            _board = null;
+            // address the reader as the right one.
+            if (readerType == ReaderType.FILE)
+            {
+                filePath = GetFilePath();
+                _sudokuReader = ReaderFactory.GetReader(readerType, _gameType, filePath);
+                _sudokuWriter = WriterFactory.GetWriter(readerType, filePath);
+
+            }
+            else if (readerType == ReaderType.CONSOLE)
+            {
+                _sudokuReader = ReaderFactory.GetReader(readerType, _gameType);
+                _sudokuWriter = WriterFactory.GetWriter(readerType);
+                Console.WriteLine(INSTRUCTIONS_MESSAGE);
+                //Example of a board
+                PrintBoardExample();
+
+                Console.WriteLine("\nEnter the board:\n ");
+            }
+            else
+            {
+                // if the user exits
+                Console.WriteLine(GOODBYE_MESSAGE);
+                return;
+            }
+            ReadSudokuWithExceptionHandling();
+        }
     }
 
 
