@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UriSudokuSolver.Board;
 using UriSudokuSolver.SolvingAlgorithm;
 
 namespace UriSudokuSolver
@@ -29,6 +30,10 @@ namespace UriSudokuSolver
         private Stack<int> _valuesSaver;
         // Board size
         private int _boardSize;
+        // Dictionary that contains cell index as key and list of peer index (the cells that it affects --> in the same row, column or box)
+        private static Dictionary<int, List<int>> _peersForCell = new Dictionary<int, List<int>>();
+        // queue for the peers of a changed cell
+        private Queue<int> _peersQueue;
 
 
 
@@ -38,13 +43,14 @@ namespace UriSudokuSolver
             _board = board.GetBoard();
             _sqrSize = (int)Math.Sqrt(board.GetRows());
             _boardSize = board.GetRows();
+            _peersForCell = SudokuSolverUtility.SetPeers(_board, _boardSize, _sqrSize);
             // Initialize board masks
             SudokuSolverUtility.InitializeBoardMasks(_board, out _masks, _boardSize);
             // Initialize the valid values for each row, column and box
             SudokuSolverUtility.SetValidValues(_board, _masks, out _validValuesRow, out _validValuesColumn, out _validValuesBox, _boardSize);
             _result = "";
             _valuesSaver = new Stack<int>();
-
+            _peersQueue = SudokuSolverUtility.SetStartPeersQueue(_board, _boardSize);
         }
 
         /*Function tries to solve the sudoku board.*/
@@ -74,9 +80,9 @@ namespace UriSudokuSolver
             // 6. Repeat until the board is solved
 
             int isSolved, totalChanged = 0;
-            do
+            while (_peersQueue.Count != 0)
             {
-                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, _board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, _boardSize);
+                isSolved = HumanTactics.HumanTacticsSolver(_valuesSaver, _peersForCell, _peersQueue, _board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, _boardSize, _peersQueue.Dequeue());
                 // If is solved is -1 there is no solution to the board 
                 if (isSolved == -1)
                 {
@@ -84,15 +90,15 @@ namespace UriSudokuSolver
                     return false;
                 }
                 totalChanged += isSolved;
-            } while (isSolved != 0);
+            }
 
 
             int emptyCellRow, emptyCellCol;
             // Find the cell with the minimum number of valid values
             SudokuSolverUtility.FindBestEmptyCell(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, _boardSize, out emptyCellRow, out emptyCellCol);
-
             if (emptyCellRow == -1)
             {
+                
                 return true;
             }
 
@@ -105,7 +111,7 @@ namespace UriSudokuSolver
                     // Assign the value to the empty cell
                     _board[emptyCellRow, emptyCellCol] = (byte)valueIndex;
                     SudokuSolverUtility.UpdateValidValues(_masks, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, emptyCellRow, emptyCellCol, valueIndex);
-
+                    _peersQueue.Enqueue(emptyCellRow * _boardSize + emptyCellCol);
                     // Try to solve the sudoku with the new value
                     if (SolveOptimizedSudoku())
                     {

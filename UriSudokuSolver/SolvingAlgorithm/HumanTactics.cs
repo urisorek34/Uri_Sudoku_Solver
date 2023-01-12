@@ -10,60 +10,61 @@ namespace UriSudokuSolver.SolvingAlgorithm
     public static class HumanTactics
     {
         /*Try to solve board once with human tactics*/
-        public static int HumanTacticsSolver(Stack<int> savedValues, byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int boardSize)
+        public static int HumanTacticsSolver(Stack<int> savedValues, Dictionary<int, List<int>> cellsPeers, Queue<int> peersQueue, byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int boardSize, int cellForPeers)
         {
             // how many changes made
             int found = 0;
             int validValues, bitCount, hiddenSingle;
-            // Go over all the matrix and search empry spaces
-            for (int row = 0; row < boardSize; row++)
+            int row, col;
+            // go over the peers of the changes cell
+            foreach (int cell in cellsPeers[cellForPeers])
             {
-                for (int col = 0; col < boardSize; col++)
+                row = cell / boardSize;
+                col = cell % boardSize;
+                // if empty space
+                if (board[row, col] == 0)
                 {
-                    // if empty space
-                    if (board[row, col] == 0)
+                    //get the values that this cell can get (in binary)
+                    validValues = SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
+                    // count them
+                    bitCount = SudokuSolverUtility.CountBits(validValues);
+                    if (bitCount == 1)
                     {
-                        //get the values that this cell can get (in binary)
-                        validValues = SudokuSolverUtility.GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row, col, boardSize);
-                        // count them
-                        bitCount = SudokuSolverUtility.CountBits(validValues);
-                        if (bitCount == 1)
-                        {
-                            // if only one value is valid for this cell, put it in the board and push to the saving stack
-                            UpdateAndPush(savedValues, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-                            found++;
-                            continue;
-                        }
-                        if (bitCount == 0)
-                        {
-                            // if is empty and doesn't have valid values then the board is unsolvale
-                            SudokuSolverUtility.CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found, boardSize);
-                            return -1;
-                        }
-                        // try to search for hidden singles --> for cells that have an option that no other cell in the row, column or box can have
-                        hiddenSingle = HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues,boardSize);
-                        if (hiddenSingle > 0)
-                        {
-                            // if found hidden single, put it in the board and push to the saving stack
-                            UpdateAndPush(savedValues, board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, hiddenSingle);
-                            found++;
-                        }
-                        if (hiddenSingle == -1)
-                        {
-                            // if is empty and can't get valid values then the board is unsolvale
-                            SudokuSolverUtility.CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found, boardSize);
-                            return -1;
-                        }
-                        //NakedPairs(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
-
+                        // if only one value is valid for this cell, put it in the board and push to the saving stack
+                        UpdateAndPush(savedValues, peersQueue, board, validValuesRow, validValuesColumn, validValuesBox, masks, boardSize, sqrSize, row, col, validValues);
+                        found++;
+                        continue;
                     }
+                    if (bitCount == 0)
+                    {
+                        // if is empty and doesn't have valid values then the board is unsolvale
+                        SudokuSolverUtility.CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found, boardSize);
+                        return -1;
+                    }
+                    // try to search for hidden singles --> for cells that have an option that no other cell in the row, column or box can have
+                    hiddenSingle = HiddenSingles(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues, boardSize);
+                    if (hiddenSingle > 0)
+                    {
+                        // if found hidden single, put it in the board and push to the saving stack
+                        UpdateAndPush(savedValues, peersQueue, board, validValuesRow, validValuesColumn, validValuesBox, masks, boardSize, sqrSize, row, col, hiddenSingle);
+                        found++;
+                    }
+                    if (hiddenSingle == -1)
+                    {
+                        // if is empty and can't get valid values then the board is unsolvale
+                        SudokuSolverUtility.CleanStack(board, savedValues, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, found, boardSize);
+                        return -1;
+                    }
+                    //NakedPairs(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, validValues);
+
                 }
             }
+
             return found;
         }
 
         /*Function finds naked pairs and updates all other cells that this two options has to be in those two cells*/
-        public static void NakedPairs(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues,int boardSize)
+        public static void NakedPairs(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int validValues, int boardSize)
         {
             int bitCount, validValues2;
             // count them
@@ -79,7 +80,7 @@ namespace UriSudokuSolver.SolvingAlgorithm
                         if (board[row2, col2] == 0 && (row != row2 || col != col2))
                         {
                             //get the values that this cell can get (in binary)
-                            validValues2 = SudokuSolverUtility.GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, row2, col2, boardSize);
+                            validValues2 = SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, row2, col2, boardSize);
                             // count them
                             if (validValues2 == validValues)
                             {
@@ -118,10 +119,12 @@ namespace UriSudokuSolver.SolvingAlgorithm
         }
 
         /*Update the board with a value and save the changes in the stack*/
-        private static void UpdateAndPush(Stack<int> savedValues, byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int sqrSize, int row, int col, int value)
+        private static void UpdateAndPush(Stack<int> savedValues, Queue<int> peersQueue, byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int[] masks, int boardSize, int sqrSize, int row, int col, int value)
         {
             SudokuSolverUtility.UpdateBoard(board, validValuesRow, validValuesColumn, validValuesBox, masks, sqrSize, row, col, value);
-            savedValues.Push(row * board.GetLength(0) + col);
+            savedValues.Push(row * boardSize + col);
+            peersQueue.Enqueue(row * boardSize + col);
+            peersQueue.Enqueue(row * boardSize + col);
         }
 
 
@@ -149,7 +152,7 @@ namespace UriSudokuSolver.SolvingAlgorithm
                     if (board[rowInsideBox, colInsideBox] == 0)
                     {
                         // add the valid values of the cell to the possible values for all the cells in the box
-                        possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, rowInsideBox, colInsideBox, boardSize);
+                        possibleInOtherCells |= SudokuSolverUtility.GetValidValuesForCell(validValuesRow, validValuesColumn, validValuesBox, sqrSize, rowInsideBox, colInsideBox, boardSize);
                     }
                 }
 
