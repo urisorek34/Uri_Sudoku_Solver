@@ -12,11 +12,7 @@ namespace UriSudokuSolver
     {
         private const int MIN_VALUE = 1;
 
-        /// <summary>
-        /// Constractor for sudoku board.
-        /// </summary>
-        /// <param name="size"> the size of the board.</param>
-        /// <param name="minValue"> the min value for the sudoko board</param>
+        /*Empty constractor for the sudoku board*/
         public SudokuBoard(int size) : base(size)
         {
 
@@ -33,7 +29,8 @@ namespace UriSudokuSolver
             int col = 0;
             foreach (char c in boardString)
             {
-                board[row, col] = (byte)(c - '0');
+                // convert the char to byte
+                _board[row, col] = (byte)(c - '0');
                 col++;
                 if (col == GetCols())
                 {
@@ -44,13 +41,13 @@ namespace UriSudokuSolver
         }
 
         /*Check that the board is folowing the rules of sudoku.*/
-        public override void ValidateBoard()
+        public override void CheckIfFollowGameRules()
         {
             for (int i = 0; i < GetRows(); i++)
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (board[i, j] != 0)
+                    if (_board[i, j] != 0)
                     {
                         if (!CheckRow(i, j) || !CheckCol(i, j) || !CheckSquare(i, j))
                         {
@@ -66,7 +63,7 @@ namespace UriSudokuSolver
         {
             for (int i = 0; i < GetCols(); i++)
             {
-                if (i != col && board[row, i] == board[row, col])
+                if (i != col && _board[row, i] == _board[row, col])
                 {
                     return false;
                 }
@@ -79,7 +76,7 @@ namespace UriSudokuSolver
         {
             for (int i = 0; i < GetRows(); i++)
             {
-                if (i != row && board[i, col] == board[row, col])
+                if (i != row && _board[i, col] == _board[row, col])
                 {
                     return false;
                 }
@@ -97,7 +94,7 @@ namespace UriSudokuSolver
             {
                 for (int j = squareCol * squareSize; j < (squareCol + 1) * squareSize; j++)
                 {
-                    if (i != row && j != col && board[i, j] == board[row, col])
+                    if (i != row && j != col && _board[i, j] == _board[row, col])
                     {
                         return false;
                     }
@@ -113,7 +110,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    if (board[i, j] == 0)
+                    if (_board[i, j] == 0)
                     {
                         return false;
                     }
@@ -130,7 +127,7 @@ namespace UriSudokuSolver
             {
                 for (int j = 0; j < GetCols(); j++)
                 {
-                    boardString += (char)(board[i, j] + '0');
+                    boardString += (char)(_board[i, j] + '0');
                 }
             }
             return boardString;

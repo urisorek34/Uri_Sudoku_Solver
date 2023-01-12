@@ -35,7 +35,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
             GameBoard board = GetRightBoard((int)Math.Sqrt(gameBoard.Length));
             board.FillBoard(gameBoard);
             // board chek if the board is legal.
-            board.ValidateBoard();
+            board.CheckIfFollowGameRules();
             return board;
         }
 
@@ -63,7 +63,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
                 }
                 return File.ReadAllText(filePath);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 throw new IlegalFilePathInputException($"File path not found. please try again.\n");
             }

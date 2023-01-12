@@ -10,7 +10,7 @@ namespace UriSudokuSolver.UserCommunication
     public static class EnumConstants
     {
         /*Enum for the different types of Readers.*/
-        public enum RedearType
+        public enum ReaderType
         {
             CONSOLE,
             FILE,

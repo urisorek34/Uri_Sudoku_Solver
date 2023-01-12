@@ -11,11 +11,11 @@ namespace UriSudokuSolver.UserCommunication.Input_Output
     internal static class UserCommunicationFactory
     {
         /*Creates a UserCommunication object depends on the communication type.*/
-        public static IUserCommunication GetUserCommunication(EnumConstants.RedearType communicationType, EnumConstants.GameType gameType)
+        public static IUserCommunication GetUserCommunication(EnumConstants.ReaderType communicationType, EnumConstants.GameType gameType)
         {
             switch (communicationType)
             {
-                case EnumConstants.RedearType.CONSOLE:
+                case EnumConstants.ReaderType.CONSOLE:
                     return new ConsoleUserCommunication(gameType);
                 default:
                     throw new NoSuchReadingTypeException("No such communication type.");

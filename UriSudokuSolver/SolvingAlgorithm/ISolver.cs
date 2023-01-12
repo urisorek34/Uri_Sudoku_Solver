@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace UriSudokuSolver
 {
-    /// <summary>
-    /// Interface for solver of a game.
-    /// </summary>
+    /*Interface for the solvers of the abstract game board*/
     interface ISolver
     {
         public byte[,] Solve();

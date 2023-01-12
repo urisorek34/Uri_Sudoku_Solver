@@ -10,31 +10,29 @@ namespace UriSudokuSolver
     public abstract class GameBoard
     {
 
-        protected byte[,] board;
+        protected byte[,] _board;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameBoard{T}"/> class.
-        /// </summary>
-        /// <param name="size">The size of the board.</param>
+        /*Basic constractor for an abstract game board*/
         public GameBoard(int size)
         {
-            board = new byte[size, size];
+            _board = new byte[size, size];
         }
-
+        
+        /*Constractor for a game with different rows and cols*/
         public GameBoard(int rows, int cols)
         {
-            board = new byte[rows, cols];
+            _board = new byte[rows, cols];
         }
 
         /*copy constractor*/
         public GameBoard(byte[,] board)
         {
-            this.board = new byte[board.GetLength(0), board.GetLength(1)];
+            _board = new byte[board.GetLength(0), board.GetLength(1)];
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    this.board[i, j] = board[i, j];
+                    _board[i, j] = board[i, j];
                 }
             }
         }
@@ -44,35 +42,37 @@ namespace UriSudokuSolver
         {
             get
             {
-                return board[row, col];
+                return _board[row, col];
             }
             set
             {
-                board[row, col] = value;
+                _board[row, col] = value;
             }
         }
         /*Get board rows number of rows*/
         public int GetRows()
         {
-            return board.GetLength(0);
+            return _board.GetLength(0);
         }
         /*Get board number of cols*/
         public int GetCols()
         {
-            return board.GetLength(1);
+            return _board.GetLength(1);
         }
         /*Return instance of the board matrix */
         public byte[,] GetBoard()
         {
-            return board;
+            return _board;
         }
+        
+        /*Set the board to a given matrix*/
         public void SetBoard(byte[,] board)
         {
-            this.board = board;
+            _board = board;
         }
         public abstract void FillBoard(string boardString);
 
-        public abstract void ValidateBoard();
+        public abstract void CheckIfFollowGameRules();
         public abstract bool IsFull();
     }
 }
