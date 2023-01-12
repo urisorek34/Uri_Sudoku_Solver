@@ -51,6 +51,8 @@ namespace UriSudokuSolver
             _result = "";
             _valuesSaver = new Stack<int>();
             _peersQueue = SudokuSolverUtility.SetStartPeersQueue(_board, _boardSize);
+
+
         }
 
         /*Function tries to solve the sudoku board.*/
@@ -79,6 +81,76 @@ namespace UriSudokuSolver
             // 5. Fill it with one of the possible values
             // 6. Repeat until the board is solved
 
+            int totalChanged = TryToSolveWithHumanTactics();
+            if (totalChanged == -1)
+            {
+                return false;
+            }
+            
+            int emptyCellRow, emptyCellCol;
+            // Find the cell with the minimum number of valid values
+            SudokuSolverUtility.FindBestEmptyCell(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, _boardSize, out emptyCellRow, out emptyCellCol);
+            if (emptyCellRow == -1)
+            {
+
+                return true;
+            }
+            
+            // if not solved after human tactics, try to solve using backtracking brute force
+            if (TryBruteForce(emptyCellRow, emptyCellCol))
+            {
+                return true;
+            }
+
+            SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
+            return false;
+        }
+
+        /*Try to solve the sudoku board using backtracing brute force.*/
+        private bool TryBruteForce(int emptyCellRow, int emptyCellCol)
+        {
+            // Try to solve the sudoku by assigning a value to the empty cell
+            for (int valueIndex = 1; valueIndex <= _boardSize; valueIndex++)
+            {
+                // Check if is safe to try to assign the value to the empty cell
+                if (SudokuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex - 1, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize))
+                {
+                    // Assign the value to the empty cell
+                    AssignValueInBoard(emptyCellRow, emptyCellCol, valueIndex);
+                    // Try to solve the sudoku with the new value
+                    if (SolveOptimizedSudoku())
+                    {
+                        return true;
+                    }
+                    //Undo the assignment after the recursive path failed
+                    RemoveValueFromBoard(emptyCellRow, emptyCellCol);
+
+                }
+
+            }
+            return false;
+
+        }
+
+        /*Assign value to the board.*/
+        private void AssignValueInBoard(int row, int col, int value)
+        {
+            _board[row, col] = (byte)value;
+            SudokuSolverUtility.UpdateValidValues(_masks, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, row, col, value);
+            _peersQueue.Enqueue(row * _boardSize + col);
+        }
+
+        /*Remove signed values from the board*/
+        private void RemoveValueFromBoard(int row, int col)
+        {
+            SudokuSolverUtility.AddValueToValidValues(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, row, col);
+            _board[row, col] = 0;
+            
+        }
+
+        /*Try to solve in human tactics untill there is no more cells that can be solved in human tactics.*/
+        private int TryToSolveWithHumanTactics()
+        {
             int isSolved, totalChanged = 0;
             while (_peersQueue.Count != 0)
             {
@@ -87,49 +159,12 @@ namespace UriSudokuSolver
                 if (isSolved == -1)
                 {
                     SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
-                    return false;
+                    return -1;
                 }
                 totalChanged += isSolved;
             }
-
-
-            int emptyCellRow, emptyCellCol;
-            // Find the cell with the minimum number of valid values
-            SudokuSolverUtility.FindBestEmptyCell(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, _boardSize, out emptyCellRow, out emptyCellCol);
-            if (emptyCellRow == -1)
-            {
-                
-                return true;
-            }
-
-            // Try to solve the sudoku by assigning a value to the empty cell
-            for (int valueIndex = 1; valueIndex <= _boardSize; valueIndex++)
-            {
-                // Check if is safe to try to assign the value to the empty cell
-                if (SudokuSolverUtility.IsSafe(emptyCellRow, emptyCellCol, valueIndex - 1, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize))
-                {
-                    // Assign the value to the empty cell
-                    _board[emptyCellRow, emptyCellCol] = (byte)valueIndex;
-                    SudokuSolverUtility.UpdateValidValues(_masks, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, emptyCellRow, emptyCellCol, valueIndex);
-                    _peersQueue.Enqueue(emptyCellRow * _boardSize + emptyCellCol);
-                    // Try to solve the sudoku with the new value
-                    if (SolveOptimizedSudoku())
-                    {
-                        return true;
-                    }
-                    //Undo the assignment after the recursive path failed
-                    SudokuSolverUtility.AddValueToValidValues(_board, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, emptyCellRow, emptyCellCol);
-                    _board[emptyCellRow, emptyCellCol] = 0;
-
-                    //RestoreInitialValues(testMatrix, testValidValuesRow, testValidValuesColumn, testValidValuesBox);
-                }
-
-            }
-            SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
-            return false;
+            return totalChanged;
         }
-
-
 
         /*To string function, return the result of the board.*/
         public override string ToString()

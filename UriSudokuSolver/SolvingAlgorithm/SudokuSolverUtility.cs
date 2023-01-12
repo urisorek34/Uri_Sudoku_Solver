@@ -61,7 +61,7 @@ namespace UriSudokuSolver
         {
             for (int peerCol = 0; peerCol < boardSize; peerCol++)
             {
-                if (peerCol != col)
+                if (peerCol != row)
                 {
                     peers.Add(row * boardSize + peerCol);
                 }
@@ -73,7 +73,7 @@ namespace UriSudokuSolver
         {
             for (int peerRow = 0; peerRow < boardSize; peerRow++)
             {
-                if (peerRow != row)
+                if (peerRow != col)
                 {
                     peers.Add(peerRow * boardSize + col);
                 }
@@ -188,7 +188,7 @@ namespace UriSudokuSolver
         /*Function checks if a  group is full*/
         private static bool CheckIfGroupFilled(int group, int size)
         {
-            //Exception because in the case of size = 1 --> size*size = 1 and then it will return true even if the group is not full
+            //Exception because in the case of size = 1 --> size*size = 1 and then it will return true 
             if (size == 1)
             {
                 return false;

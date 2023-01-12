@@ -14,14 +14,14 @@ namespace UriSudokuSolver.UserCommunication.Writer
         /*Empty constractor for the SudokuBoardWriter class.*/
         public SudokuBoardFileWriter(string filePath)
         {
-            _filePath = filePath;
+            _filePath = filePath.Replace(".txt", "");
         }
         
 
         /*Write board to solved(filename).txt*/
         public void WriteBoard(GameBoard gameBoard)
         {
-            string fileName = "_solved.txt";
+            string fileName = "_Solved!.txt";
 
             // write to file the solved string
             using (StreamWriter file = new StreamWriter(_filePath + fileName))
