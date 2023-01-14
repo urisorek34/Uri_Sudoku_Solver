@@ -45,12 +45,12 @@ For example if the binary number (integer) representing a row is 011100111 it me
 The last array contains the bit masks of each value that the board can get. The solver use the bit masks to reduce/add specific value for a row/column/box possible values using bit operators.
 For example: 000010000 is bit mask for 5 value. 
 
-If we want to reduce from 1111011110 the value 5 we will do OR bit opereration between he possible values and 5's bit mask and we will get 111111110.
+If we want to reduce from row with possible values of 1111011110 the value 5 we will do OR bit operation between he possible values and 5's bit mask and we will get 111111110.
 
-If we want to add to 1111111110 the value 5 we will do AND NOT bit opererations between he possible values and 5's bit mask and we will get 111101110.
+If we want to add to row with possible values of 1111111110 the value 5 we will do AND NOT bit operations between the row possible values and 5's bit mask and we will get 111101110.
 
 
-Using bitwise reduces the runtime of the backtracking. Bit operations is the fastests calculation for a cumputer. And it also make the IsSafe() function that checks if a value can be placed in a certian cell, O(1) with one calculation instead of O(n) (go over the row column and box of a cell and check if a value exists).
+Using bitwise reduces the runtime of the backtracking. Bit operations is the fastests calculation for a cumputer. It also make the IsSafe() function, that checks if a value can be placed in a certian cell, O(1) with one calculation instead of O(n) (goes over the row, column and box of a cell and check if a value already exists).
 
 
 #### Human tactics optimization
@@ -84,7 +84,7 @@ By doing that we reducing the runtime of solving most od the sudoku boards.
 
 ## UI Options
 
-When you run the project, this console window will open:
+When you run the project, this console window will appear:
 ![image](https://user-images.githubusercontent.com/58790516/212472305-f230f6d8-fb1c-47f4-9853-177630116c85.png)
 
 As you can see there are 4 valid options in the menu:
