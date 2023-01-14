@@ -83,9 +83,9 @@ namespace UriSudokuSolver.SolvingAlgorithm
             int cellInBox = row % sqrSize * sqrSize + col % sqrSize;
             // check the box number
             int boxNumber = SudokuSolverUtility.GetBoxIndex(row, col, sqrSize);
-           
+
             int possibleForCellBox, possibleForCellRow, possibleForCellCol;
-           
+
             // Get possible vlues for box, row and column
             for (int indexInGroup = 0; indexInGroup < boardSize; indexInGroup++)
             {

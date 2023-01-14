@@ -29,9 +29,11 @@ namespace UriSudokuSolver.Tests
         [TestMethod()]
         public void ValidateStringBoardNullTest()
         {
+            //Arrange
             string board = "";
             SudokuBoardValidator validator = new SudokuBoardValidator();
             // return right exception
+            //Act + Assert
             Assert.ThrowsException<BoardIsEmptyException>(() => validator.ValidateBoard(board));
         }
 
@@ -39,9 +41,11 @@ namespace UriSudokuSolver.Tests
         [TestMethod()]
         public void ValidateStringBoardNotRightSizeTest()
         {
+            //Arrange
             string board = "123456789";
             SudokuBoardValidator validator = new SudokuBoardValidator();
             // return right exception
+            // Act + Assert
             Assert.ThrowsException<BoardStringSizeIsNotValidException>(() => validator.ValidateBoard(board));
         }
 
@@ -49,9 +53,11 @@ namespace UriSudokuSolver.Tests
         [TestMethod()]
         public void ValidateStringBoardNotValidTest()
         {
+            //Arrange
             string board = "00000508000060104300000000001050000000010600030000000553:000061000000004000000000";
             SudokuBoardValidator validator = new SudokuBoardValidator();
             // return right exception
+            // Act + Assert
             Assert.ThrowsException<BoardStringIlegalCharException>(() => validator.ValidateBoard(board));
 
         }

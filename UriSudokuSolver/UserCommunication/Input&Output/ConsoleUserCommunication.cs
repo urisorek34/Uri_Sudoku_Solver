@@ -169,7 +169,7 @@ namespace UriSudokuSolver.UserCommunication
         /*Function gets from the user the file path to read from.*/
         private string GetFilePath()
         {
-            Console.WriteLine("Please enter the path to the file you want to read from: ");
+            Console.WriteLine("Please enter a valid txt file path containing (a valid board string) to read from: ");
             return Console.ReadLine();
 
         }
