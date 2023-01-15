@@ -91,5 +91,86 @@ namespace UriSudokuSolverTests.SolvingAlgorithm
             //Assert
             Assert.AreEqual(expectedBoardString, board.ToString());
         }
+
+        /*Medium board 6.*/
+        [TestMethod]
+        public void MediumBoard6Test()
+        {
+            // Arrange
+            string boardString = "00000000000000003000000000000?<00000<;000000000000>800000000000000000509000200000000080000000>00600@0720000=190000000000000000000000000000000000000000;:00000000000000500000080000000?<>600040001<00000000090000000000060410000000000000?0>@01000080000000000000";
+            string expectedBoardString = "<9?7>:=@354;86123;@46918:=275?<>512=<;4?>986:@73:6>852371@?<9;=4>371=5@98?62;:4<25=;18?<@:947>366?:@4723<>;=1958489<:>6;53712=@?7>159@84;23:6<?=846?7=;:91<>352@@2<:365147=?>8;99=;32?<>68@547:11<3>@4:=7659?28;;752?<96=418@3>:=:498372?;>@<165?@86;1>52<:3=497";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Medium board 7.*/
+        [TestMethod]
+        public void MediumBoard7Test()
+        {
+            // Arrange
+            string boardString = "0000000004;000000000000000300000;=00000@20000000000600000000200?0500000?000007@090<7000=005@0060000000000000900300007000902001=00<090000=00000:0000000000000000600000000000000000000000080005000000400800010000;51000;00000000<00300005000000000<0000403?;70000>";
+            string expectedBoardString = "37821?=9:4;>6<5@49?<;5>26@381=7:;=15:64@2?<78>39:>@6837<59=124;?>56:921?;38=<7@49?<7483=1>5@;:6212=;@><5764:9?83@8437:;69<2?>1=58<2937?>=56;4@:1=4315928>:@<7;?66@5><1:;47?2389=7;:?=@64819352><?674><8:3=19@52;51>=6;97@2:4?3<823;@?=51<8>6:947<:9824@3?;75=61>";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Medium board 8.*/
+        [TestMethod]
+        public void MediumBoard8Test()
+        {
+            // Arrange
+            string boardString = "000000008003000400090020060000079000000061200060502070008000500010000020405000003";
+            string expectedBoardString = "621943758783615492594728361142879635357461289869532174238197546916354827475286913";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+
+        /*Medium board 9.*/
+        [TestMethod]
+        public void MediumBoard9Test()
+        {
+            // Arrange
+            string boardString = "<000509000000062000000005000?400000000=000000:000000<06070008000700000000050403050004000000000000800000000600?00000005>;04000000:;000000608000000000000000000000609>70000000004042000009000006>00020000@000008?0?0000:000@0000000001000000020000000010000=000000";
+            string expectedBoardString = "<:8;5@9?431=>762@1=782:359>6?4<;946?>;=728@<5:13>532<4617:;?8@=979;:@=8<?2514>365?><49763;=821@:=84@213:<76>9?;52613?5>;@49:<=87:;?=3>@46189752<17<8=6;5>?2439:@639>7<?2=5:@1;4842@5:819;<37=6>?3=29674@:><5;8?1?>54;:281@736<9=;<:19?5=8642@37>8@7613<>9=?;:254";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Medium board 10.*/
+        [TestMethod]
+        public void MediumBoard10Test()
+        {
+            // Arrange
+            string boardString = "0E003000000000F000<0000000=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000009000000400000000000000000000000000000000000000000000000000000500000000000000000000000700000000000000000000000000000000000000000000000000000000003000000000000000000F000000000000C000000000000000000000000000004000000000000000005000000000000000000000000000000000000;00000000000000000000:000000000000000000B000000000000G00000000000000000000000000000010000000000000000000000C00000000000000000000200000000000000000000000A000";
+            string expectedBoardString = "4E1235=@8D>?:GFCI9<6H7BA;F=D:CA31HI8;79B>?E@46<52G?IB9;:C47>65A<=82HGD@E3F1>HA86GB<E9243C@5;1F7=?:ID<G@7526F?;HDI1EB:=A3>8C49IF<CE328G61B4@?=5:9H7D>;AHD;@=E?BF1<6C7>3GI8A459:2GB:?8<5>;493FAI267DC1@HE=615>7=H:9AG8D2;4FBE@3C?<I9A432D@IC7:E5=H;<?>18BFG6E@I=HC<;B8F9?3:AD465G21>72895G14D6H;@>B<ECF7I?3A=::?F<D>A25@47=IGH13;B968CE7>C;BF93:GA12E6@8<=?D4I5H1634A7E?I=5C8HDG>2:9<F;B@3<2I1B;9=C7FE65D@>HGA:4?8D;=H@?1A>:3IB84<9C2E5G67FC:8G?4D53<@21>967AIFE;=HBB57F>6IG2E=:HDA?384;C9@1<A46E987H@F?G<;C:B51=2ID3>52>6IHFEDBCA@?87=;3<:1G94@9HDFIGCA?E=;:714652B><83=7G1<;:643B>952FA@?8IHEDC;CEA:98715D<643IHGB>F=2@?83?B4@>=<2IHGF19EDC:;A765";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
     }
 }

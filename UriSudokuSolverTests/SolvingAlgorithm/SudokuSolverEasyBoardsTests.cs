@@ -96,5 +96,86 @@ namespace UriSudokuSolverTests.SolvingAlgorithm
             Assert.AreEqual(expectedBoardString, board.ToString());
         }
 
+        /*Easy board 6.*/
+        [TestMethod]
+        public void EasyBoard6Test()
+        {
+            // Arrange
+            string boardString = "509600000030807920000300800000016080050000010000000032104030000006709000000000003";
+            string expectedBoardString = "589624371431857926267391845743216589652983714918475632194538267326749158875162493";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Easy board 7.*/
+        [TestMethod]
+        public void EasyBoard7Test()
+        {
+            // Arrange
+            string boardString = "600040010010000003002008040020000004007382600500000020090500100400000070050090002";
+            string expectedBoardString = "635249817814756293972138546326915784147382659589467321293574168461823975758691432";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Easy board 8.*/
+        [TestMethod]
+        public void EasyBoard8Test()
+        {
+            // Arrange
+            string boardString = "100042700200003008057001000000000060090000100000715200000000002018009003900054000";
+            string expectedBoardString = "189642735264573918357891426571928364892436157643715289435187692718269543926354871";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Easy board 9.*/
+        [TestMethod]
+        public void EasyBoard9Test()
+        {
+            // Arrange
+            string boardString = "003080600820000000006075080000000750900050806017006000000007010000500000000064937";
+            string expectedBoardString = "753182649821649375496375182268493751934751826517826493642937518379518264185264937";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*Easy board 10.*/
+        [TestMethod]
+        public void EasyBoard10Test()
+        {
+            // Arrange
+            string boardString = "040287000000000000309000002507034600400000008200870009000020090060700400000041006";
+            string expectedBoardString = "641287935728593164359416872587934621493162758216875349134628597862759413975341286";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+
     }
 }

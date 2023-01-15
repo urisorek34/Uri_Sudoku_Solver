@@ -93,5 +93,91 @@ namespace UriSudokuSolverTests.SolvingAlgorithm
             Assert.AreEqual(expectedBoardString, board.ToString());
         }
 
+
+        /*hard board 6.*/
+        [TestMethod]
+        public void HardBoard6Test()
+        {
+            // Arrange
+            string boardString = "000<0000:?00001000000500001<000?00=0?00:00070>0003;0000040957:0004005=0006>?0@00@1>00?00=0000000200=007004@000<:500000;0020000310004200?>0000900>000@00309000200;00010=0000000@>30090080000@070000010;>530600=0800030@?00=0200>40>000000@<04205900@0000490000;00";
+            string expectedBoardString = "496<372;:?=>581@:72@>59=681<;34?18=5?4@:2;37<>96?3;>681<4@957:2=74<:5=3916>?8@;2@1>84?:2=3<;95672;3=817654@9>?<:5?96<>;@72:8=4316@142<5?>:7=398;><?7@:43;98612=5;:8219=7<543?6@>3=59;68>?12@47:<<2419;>5376:@=?89573:@?18=;26<>4=>:;7368@<?4215986@?=2<49>51:;73";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*hard board 7.*/
+
+        [TestMethod]
+        public void HardBoard7Test()
+        {
+            // Arrange
+            string boardString = "0700080000063000000070<008?0150006010;0070000?4@000?:10003000000050000;307>0@0040000000500300<97<00000006:10002=02=0970<0@0?:050;00=090000080000005030=0000>0@0?804000:000;300<9>00704@056:00;0060000000><00?000@0040560020;970000098?00100000030;02000000400600";
+            string expectedBoardString = "97><@8?4:15632=;2=;37><9@8?4156:56:1=;327><98?4@4@8?:156;32=<97>156:2=;397><@8?4?4@86:15=;32><97<97>4@8?6:15;32=32=;97><4@8?:156;32=<97>?4@86:15:15632=;<97>4@8?8?4@56:12=;37><9><97?4@856:1=;326:15;32=><97?4@8@8?4156:32=;97><7><98?4@156:2=;3=;32><978?4@56:1";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+
+        /*hard board 8.*/
+
+        [TestMethod]
+        public void HardBoard8Test()
+        {
+            // Arrange
+            string boardString = "1000000<0050:200004?09>00000@70000750004>0198000000000@724000>6100807530:24000>66190000000700:00?:0061008<;00@7050000?020>60000;000980;=00074?:00?02>009=00;03@0000@00?00006;00<00=800000004000>0>00=80;700@240004000000;=0000000700:200000000=80<00300000000000";
+            string expectedBoardString = "19>6;=8<@753:24?:24?19>6<;=8@7533@75?:24>6198<;==8<;53@724?:9>61;=8<753@:24?19>6619><;=83@75?:24?:24619>8<;=3@7553@74?:29>61=8<;>6198<;=53@74?:24?:2>619=8<;53@7753@24?:19>6;=8<<;=8@753?:24619>9>61=8<;753@24?:24?:9>61;=8<753@@753:24?619><;=88<;=3@754?:2>619";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+
+        /*hard board 9.*/
+
+        [TestMethod]
+        public void HardBoard9Test()
+        {
+            // Arrange
+            string boardString = "0E487:009200I300000=<;0?0090:50>00G=1B00;60A<87FE003000=1BC00;0?070008:5@9200D=1<00?080FE450920000006?A0;80FE400092>I0G0010C0E48705I000003G00000100?0<90:0I>B30H10C00F00<;00E4000H>B1000=0000<@E4075I92:CD=060F?A07@E40I00:50B30H00000000000I02:B0GH>10000D=00000A00@94070000I00GH>A00FE00487030:5C0H00600=000009030:00C000?0006000<;2:5I0B000>6?0=1EA<;0@9000G0>B060D01FEA<;94870002:0:5000CD00B?A=004<0F092870H0BC00A010040;02800930:50=1000000000200@0:0I3CDH>000FE40087030:000000C0A=108709230:0IC00>BA=06000<007090:GH5I0D0>B00160A08;F05I00H00>00A006080FE00:000>000=A000048;0E00002G000006?A000;FE2:7@905I3G000000FE402:0@90H003000CDA<100";
+            string expectedBoardString = "FE487:5@92H>I3G1BCD=<;6?A@92:5H>I3G=1BCD;6?A<87FE4I3GH>=1BCD<;6?A7FE48:5@92BCD=1<;6?A87FE45@92:H>I3G6?A<;87FE4:5@92>I3GH=1BCDE487@5I92:>B3GH6CD=1;F?A<92:5I>B3GH16CD=F?A<;7@E483GH>B16CD=;F?A<@E4875I92:CD=16;F?A<7@E48I92:5>B3GH?A<;F7@E485I92:B3GH>16CD=D=16?FEA<;@948732:5IBCGH>A<;FE@9487I32:5CGH>B6?D=1487@9I32:5BCGH>?D=16FEA<;2:5I3BCGH>6?D=1EA<;F@9487GH>BC6?D=1FEA<;9487@I32:5:5I3GCDH>B?A=164<;FE9287@H>BCD?A=16E4<;F287@93G:5I=16?AE4<;F9287@G:5I3CDH>B<;FE49287@3G:5IDH>BC?A=1687@923G:5ICDH>BA=16?E4<;F7@92:GH5I3D=>BC<16?A48;FE5I3GHD=>BCA<16?8;FE42:7@9>BCD=A<16?48;FE:7@92GH5I316?A<48;FE2:7@9H5I3GD=>BC;FE482:7@9GH5I3=>BCDA<16?";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
+        /*hard board 10.*/
+        [TestMethod]
+        public void HardBoard10Test()
+        {
+            // Arrange
+            string boardString = "213000=<6800000>0:>010000000006000;5079:004200@?<@0080500070420000130@00008;009:000001000<0000065600:0792000?0<@=00?00;5900034210=0@068009:00302042000000068007000900003?=000800;00000074010@?0<:>09342000=<008;000000:00420<0?000000000000:00340000?0<000000:00";
+            string expectedBoardString = "2134@?=<68;579:>9:>71342<@?=;56868;5>79:1342=<@?<@?=8;56:>7942134213<@?=568;>79:79:>2134=<@?8;56568;:>792134?=<@=<@?68;59:>73421?=<@568;79:>13423421=<@?;568:>79>79:4213?=<@68;5;5689:>74213@?=<:>793421@?=<568;8;5679:>3421<@?=@?=<;568>79:21341342?=<@8;569:>7";
+            SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));
+            board.FillBoard(boardString);
+            SudokuSolver solver = new SudokuSolver(board);
+            //Act
+            solver.Solve();
+            //Assert
+            Assert.AreEqual(expectedBoardString, board.ToString());
+        }
+
     }
 }
