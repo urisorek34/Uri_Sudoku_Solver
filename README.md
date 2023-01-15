@@ -50,7 +50,7 @@ If we want to reduce from row with possible values of 1111011110 the value 5 we 
 If we want to add to row with possible values of 1111111110 the value 5 we will do AND NOT bit operations between the row possible values and 5's bit mask and we will get 111101110.
 
 
-Using bitwise reduces the runtime of the backtracking. Bit operations is the fastests calculation for a cumputer. It also make the IsSafe() function, that checks if a value can be placed in a certian cell, O(1) with one calculation instead of O(n) (goes over the row, column and box of a cell and check if a value already exists).
+Using bitwise reduces the runtime of the backtracking. Bit operations is the fastests calculation for a cumputer. It also make the IsSafe() function, that checks if a value can be placed in a certian cell O(1) in runtime efficiency, with one calculation instead of O(n) (goes over the row, column and box of a cell and check if a value already exists).
 
 
 #### Human tactics optimization
@@ -79,7 +79,7 @@ Saving "peers" for each cell and when changing a value go over the changed value
 By saving peers (the cells that are effected if this cell would change) of each cell, we reduce runtime from O(n^2) (go over all the matrix every time) to O(n).
 
 Find the empty cell with the least posible values - go over the matrix and find the empty cell with the least possible values.
-By doing that we reducing the runtime of solving most od the sudoku boards.
+By doing that we reduce the runtime of solving most of the sudoku boards.
 
 
 ## UI Options
@@ -95,15 +95,15 @@ As you can see there are 4 valid options in the menu:
 If the user doesn't select a valid input the program will ask him again for valid input.
 
 ### Solving options
-After choosing 's' Solving option this message will appear: 
+After choosing 's' Solving option, this message will appear: 
 "Please enter the type of input you want to use --> c for console, f for file and e to exit:"
 
 If the user choose Console this window will appear (it has all the instractions and example): 
 ![image](https://user-images.githubusercontent.com/58790516/212474224-b5a57632-3f8e-4408-a188-575d4d9d9be3.png)
 The board has to be a board string like the example, otherwise the porgram will show error message in red color.
 
-If the user choose File he'll be asked to give a valid path to a valid <b>txt file</b> with a valid string board.
-The file path has to be a valid path to an existing txt file containing a valid board string, otherwise the porgram will show error message in red color.
+If the user choose File option, he'll be asked to give a valid file path.
+The file path has to be a valid path to an <b>existing txt file</b> containing a valid board string, otherwise the porgram will show error message in red color.
 The solution string board will be written to a new txt file with the txt file name + _Solved!:
 ![image](https://user-images.githubusercontent.com/58790516/212474866-88f97079-9c3e-4567-be4c-1d39350c7d9f.png)
 
@@ -124,11 +124,13 @@ Here are the steps for runing the project:
 
 
 ## Tests
-The project has 35 tests that contain Validation testing and sudoku board solving testing seperated by board difficulty.
+The project has 50 tests that contain Validation testing and sudoku board solving testing seperated by board difficulty.
 
 To run the tests press right click on one of the public classes in the project and press Run Test (or Ctrl+R+T).
 ![image](https://user-images.githubusercontent.com/58790516/212475319-4b36e43c-7d67-485a-af92-68732ea3eeb6.png)
 ![image](https://user-images.githubusercontent.com/58790516/212475347-ed0305fa-aa05-42eb-8aab-efe3585698c5.png)
 
 
-
+## Personally 
+In this project I chose to implement the backtracking algorithm to solve sudoku boards. 
+During the project I had a dilemma whether to do the task by using the Dancing Links algorithm, because I read it is one of the fastest ways to solve a sudoku and it has a lot of metirial about it online. I read two articles about the algorithm and came to the conclusion that although it is probably the most efficient algorithm in terms of runtime for solving a sudoku board (probably much fater than Backtracking),especially large 25x25 boards, Dancing Links is an complete algorithm that can't be more optimized then it already is. In the end I chose Backtracking because I wanted to think and research myself about different optimizations for <b>my</b> algorithm.
