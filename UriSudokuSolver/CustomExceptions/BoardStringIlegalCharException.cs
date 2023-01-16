@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UriSudokuSolver.CustomExceptions
+﻿namespace UriSudokuSolver.CustomExceptions
 {
     /*Exception for when a board string has an unvalid char.*/
     public class BoardStringIlegalCharException : BoardStringNotValidException

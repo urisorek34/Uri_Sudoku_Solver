@@ -199,7 +199,7 @@ namespace UriSudokuSolver.UserCommunication
             Console.ResetColor();
             Console.WriteLine("The Board After solving: \n");
             _sudokuWriter.WriteBoard(board);
-            
+
         }
 
         /*Read to the sudoku board the values with exceptions handled*/

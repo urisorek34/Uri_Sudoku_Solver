@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UriSudokuSolver.CustomExceptions;
+﻿using UriSudokuSolver.CustomExceptions;
 using UriSudokuSolver.UserCommunication.Validation;
 
 namespace UriSudokuSolver.UserCommunication.Reader
@@ -50,7 +45,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
                 default:
                     throw new NoSuchGameException($"Invalid board type {boardType}.");
             }
-            
+
         }
 
         /*Read file with exception handling.*/
@@ -84,7 +79,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
             {
                 throw new IlegalFilePathInputException($"File path {filePath} not found. please try again.\n");
             }
-            
+
         }
 
 

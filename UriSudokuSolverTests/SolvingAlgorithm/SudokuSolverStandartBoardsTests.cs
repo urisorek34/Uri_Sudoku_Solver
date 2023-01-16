@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UriSudokuSolver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UriSudokuSolver.Tests
 {
@@ -117,7 +111,7 @@ namespace UriSudokuSolver.Tests
 
         /*Test 9X9 board with only 0's.*/
         [TestMethod()]
-        public void NineOnNineZeroTest() 
+        public void NineOnNineZeroTest()
         {
             string boardString = "000000000000000000000000000000000000000000000000000000000000000000000000000000000";
             SudokuBoard board = new SudokuBoard((int)Math.Sqrt(boardString.Length));

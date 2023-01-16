@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UriSudokuSolver.UserCommunication.Writer
+﻿namespace UriSudokuSolver.UserCommunication.Writer
 {
     /*Interface for writing the sudoku game board.*/
     internal class SudokuBoardWriter : IBoardWriter
@@ -24,7 +16,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
             int sqrtSize = (int)Math.Sqrt(size);
             ConsoleColor digitColor = DecideDigitColor(board);
             // print the first border
-            BoarderWrite(sqrtSize*2 - 1, size, sqrtSize);
+            BoarderWrite(sqrtSize * 2 - 1, size, sqrtSize);
 
             // for every row in the board paint border + numbers
             for (int row = 0; row < size * 2; row++)
@@ -46,7 +38,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
 
 
         /*Returns the digit color based on if the board is solved or not*/
-        private ConsoleColor DecideDigitColor(GameBoard board) 
+        private ConsoleColor DecideDigitColor(GameBoard board)
         {
             if (board.IsFull())
             {
@@ -89,7 +81,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
         }
 
         /*prints the digit*/
-        private void DigitWrite(ConsoleColor digitColor, int row, int sqrtSize,int size, GameBoard board)
+        private void DigitWrite(ConsoleColor digitColor, int row, int sqrtSize, int size, GameBoard board)
         {
             // the first border
             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -114,6 +106,6 @@ namespace UriSudokuSolver.UserCommunication.Writer
 
     }
 
-    
+
 
 }

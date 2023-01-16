@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UriSudokuSolver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UriSudokuSolver.CustomExceptions;
 
 namespace UriSudokuSolver.Tests
@@ -24,7 +18,7 @@ namespace UriSudokuSolver.Tests
             //Assert
             //No exception thrown.
         }
-        
+
         /*Test for when the board is null.*/
         [TestMethod()]
         public void ValidateStringBoardNullTest()
