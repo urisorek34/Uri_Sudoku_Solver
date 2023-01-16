@@ -14,6 +14,7 @@ namespace UriSudokuSolver.UserCommunication.Reader
         private string filePath;
         private IValidator validator;
         private EnumConstants.GameType boardType;
+        private const string FILE_FORMAT = ".txt";
 
 
         /*Constractor for the file board reader.*/
@@ -57,27 +58,31 @@ namespace UriSudokuSolver.UserCommunication.Reader
         {
             try
             {
-                if (!filePath.EndsWith(".txt"))
+                if (!filePath.EndsWith(FILE_FORMAT))
                 {
-                    throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+                    throw new IlegalFilePathInputException($"File path {filePath} not legal. It has to end with a {FILE_FORMAT} format. please try again.\n");
                 }
                 return File.ReadAllText(filePath);
             }
             catch (FileNotFoundException)
             {
-                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+                throw new IlegalFilePathInputException($"File path {filePath} not found. please try again.\n");
             }
             catch (UnauthorizedAccessException)
             {
-                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+                throw new IlegalFilePathInputException($"File path {filePath} not uatherized. please try again.\n");
             }
             catch (DirectoryNotFoundException)
             {
-                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+                throw new IlegalFilePathInputException($"Directory path of {filePath} not found. please try again.\n");
+            }
+            catch (PathTooLongException)
+            {
+                throw new IlegalFilePathInputException($"File path {filePath} is too long. please try again.\n");
             }
             catch (IOException)
             {
-                throw new IlegalFilePathInputException($"File path not found. please try again.\n");
+                throw new IlegalFilePathInputException($"File path {filePath} not found. please try again.\n");
             }
             
         }
