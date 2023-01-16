@@ -1,11 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UriSudokuSolver.Board;
-using UriSudokuSolver.SolvingAlgorithm;
+﻿using UriSudokuSolver.SolvingAlgorithm;
 
 namespace UriSudokuSolver
 {
@@ -43,7 +36,7 @@ namespace UriSudokuSolver
             _board = board.GetBoard();
             _sqrSize = (int)Math.Sqrt(board.GetRows());
             _boardSize = board.GetRows();
-            _peersForCell = SudokuSolverUtility.SetPeers(_board,_boardSize, _sqrSize);
+            _peersForCell = SudokuSolverUtility.SetPeers(_board, _boardSize, _sqrSize);
             // Initialize board masks
             SudokuSolverUtility.InitializeBoardMasks(out _masks, _boardSize);
             // Initialize the valid values for each row, column and box
@@ -137,7 +130,7 @@ namespace UriSudokuSolver
             _board[row, col] = (byte)value;
             SudokuSolverUtility.UpdateValidValues(_masks, _validValuesRow, _validValuesColumn, _validValuesBox, _sqrSize, row, col, value);
             _peersQueue.Add(row * _boardSize + col);
-            
+
         }
 
         /*Remove signed values from the board*/
@@ -161,7 +154,7 @@ namespace UriSudokuSolver
                 {
                     SudokuSolverUtility.CleanStack(_board, _valuesSaver, _validValuesRow, _validValuesColumn, _validValuesBox, _masks, _sqrSize, totalChanged, _boardSize);
                     return -1;
-                }                
+                }
                 // remove Duplicates peers  
                 _peersQueue = _peersQueue.ToHashSet().ToList();
                 totalChanged += isSolved;

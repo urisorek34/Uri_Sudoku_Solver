@@ -34,6 +34,6 @@ namespace UriSudokuSolver.Tests
             // Assert
             Assert.ThrowsException<BoardNotFollowGameRulesException>(() => sudokuBoard.CheckIfFollowGameRules());
         }
-        
+
     }
 }

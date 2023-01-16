@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Drawing;
-using System.IO.Pipes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UriSudokuSolver.Board;
-
-namespace UriSudokuSolver
+﻿namespace UriSudokuSolver
 {
     /*Sudoku solver static utility class.*/
     static class SudokuSolverUtility
@@ -164,19 +154,19 @@ namespace UriSudokuSolver
                     for (int col = 0; col < boardSize; col++)
                     {
                         // check if the next cell is the min eempty cell
-                        if (ReplaceIfMin(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, boardSize, row,col, ref minValidValues, ref emptyCellRow, ref emptyCellCol))
+                        if (ReplaceIfMin(board, validValuesRow, validValuesColumn, validValuesBox, sqrSize, boardSize, row, col, ref minValidValues, ref emptyCellRow, ref emptyCellCol))
                         {
                             return;
                         }
                     }
-                    
+
                 }
 
             }
         }
 
         /*Check if a cell has less posible values then the currnt min cell and if it has, replace the min cell with it*/
-        private static bool ReplaceIfMin(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int boardSize, int row,int col, ref int minValidValues, ref int emptyCellRow, ref int emptyCellCol)
+        private static bool ReplaceIfMin(byte[,] board, int[] validValuesRow, int[] validValuesColumn, int[] validValuesBox, int sqrSize, int boardSize, int row, int col, ref int minValidValues, ref int emptyCellRow, ref int emptyCellCol)
         {
             int validValues, bitCount;
             // if cell is empty

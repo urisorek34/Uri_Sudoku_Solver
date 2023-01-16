@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UriSudokuSolver.UserCommunication.Writer
+﻿namespace UriSudokuSolver.UserCommunication.Writer
 {
     /*Writer to file*/
     public class SudokuBoardFileWriter : IBoardWriter
@@ -16,7 +10,7 @@ namespace UriSudokuSolver.UserCommunication.Writer
         {
             _filePath = filePath.Replace(".txt", "");
         }
-        
+
 
         /*Write board to solved(filename).txt*/
         public void WriteBoard(GameBoard gameBoard)

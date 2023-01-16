@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UriSudokuSolver
+﻿namespace UriSudokuSolver
 {
     /*Represent abstract game board*/
     public abstract class GameBoard
@@ -17,7 +11,7 @@ namespace UriSudokuSolver
         {
             _board = new byte[size, size];
         }
-        
+
         /*Constractor for a game with different rows and cols*/
         public GameBoard(int rows, int cols)
         {
@@ -64,7 +58,7 @@ namespace UriSudokuSolver
         {
             return _board;
         }
-        
+
         /*Set the board to a given matrix*/
         public void SetBoard(byte[,] board)
         {
